@@ -152,9 +152,16 @@
               mask-composite: intersect;
     }
     :root[data-theme="light"] .hero-photo { opacity: .92; }
-    /* On phones the photo becomes a faded backdrop behind the text */
+    /* On phones the photo moves to the top as its own block and fades into the background; the text sits below it */
     @media (max-width: 860px) {
-      .hero-photo { width: 100%; opacity: .22; -webkit-mask-image: linear-gradient(to bottom, #000 30%, transparent 100%); mask-image: linear-gradient(to bottom, #000 30%, transparent 100%); -webkit-mask-composite: initial; mask-composite: initial; }
+      .hero { flex-direction: column; align-items: stretch; justify-content: flex-start; min-height: 0; padding: 62px 0 48px; }
+      .hero-photo {
+        position: relative; width: 100%; height: min(62vh, 520px); flex: none; opacity: 1; object-position: center 12%;
+        -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%); mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+        -webkit-mask-composite: initial; mask-composite: initial;
+      }
+      .hero .wrap { margin-top: -56px; }
+      .hero-text { max-width: none; }
     }
 
     /* Floating skill chips sit over the photo, on the right */
