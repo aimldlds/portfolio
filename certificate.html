@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <title>Certificate | Mohsin Chaudhary</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: #1d375c; color: #fff; font-family: "Inter", system-ui, -apple-system, sans-serif; overflow: hidden; }
+
+    /* Same navy as the certificate's own frame, so any spare space around it blends in as part of the frame */
+    #bg { position: fixed; inset: 0; background: #1d375c; }
+
+    /* The certificate: as large as the screen allows */
+    #stage { position: fixed; inset: 0; display: grid; place-items: center; }
+    #cert { width: 100vw; height: 100vh; height: 100dvh; object-fit: contain; display: block; animation: in .5s ease both; }
+    @keyframes in { from { opacity: 0; transform: scale(.985); } }
+
+    /* On a phone held upright, turn the certificate sideways so it fills the whole screen */
+    body.fill #cert { position: absolute; width: 100dvh; height: 100vw; transform: rotate(90deg); animation: none; }
+
+    .bar {
+      position: fixed; z-index: 5; display: flex; gap: 10px; padding: 12px;
+      padding-top: calc(12px + env(safe-area-inset-top, 0px)); padding-left: calc(12px + env(safe-area-inset-left, 0px)); padding-right: calc(12px + env(safe-area-inset-right, 0px));
+    }
+    .bar.top { top: 0; left: 0; right: 0; justify-content: space-between; align-items: flex-start; }
+    .bar.bottom { bottom: 0; left: 0; right: 0; justify-content: center; padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border-radius: 999px; font-size: 14px; font-weight: 600; text-decoration: none; cursor: pointer; border: 0;
+      color: #fff; background: rgba(8, 18, 38, .62); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.22);
+      transition: background .2s, transform .2s; -webkit-tap-highlight-color: transparent;
+    }
+    .chip:hover { background: rgba(94, 234, 212, .9); color: #06241f; transform: translateY(-1px); }
+    .chip:active { transform: scale(.96); }
+    #rot { display: none; }
+    @media (orientation: portrait) { #rot { display: inline-flex; } }
+    #err { position: fixed; inset: 0; display: none; place-items: center; text-align: center; padding: 24px; z-index: 6; }
+    @media (prefers-reduced-motion: reduce) { #cert { animation: none; } }
+  </style>
+</head>
+<body>
+  <div id="bg" aria-hidden="true"></div>
+  <div id="stage"><img id="cert" alt="Microsoft certificate" decoding="async"></div>
+
+  <div class="bar top">
+    <a class="chip" href="./#projects">← Back</a>
+    <a class="chip" id="pdf" href="#" target="_blank" rel="noopener">Download PDF ↓</a>
+  </div>
+  <div class="bar bottom"><button class="chip" id="rot" type="button">⟲ Fill screen</button></div>
+  <div id="err"><p>Certificate not found. <a class="chip" href="./#projects">← Back to portfolio</a></p></div>
+
+  <script>
+    const CERTS = {
+      "dp-800-sql-ai-developer": "Microsoft Certified: SQL AI Developer Associate (DP-800)",
+      "ai-102-azure-ai-engineer": "Microsoft Certified: Azure AI Engineer Associate (AI-102)",
+      "dp-100-azure-data-scientist": "Microsoft Certified: Azure Data Scientist Associate (DP-100)",
+      "dp-600-fabric-analytics-engineer": "Microsoft Certified: Fabric Analytics Engineer Associate (DP-600)",
+      "dp-700-fabric-data-engineer": "Microsoft Certified: Fabric Data Engineer Associate (DP-700)",
+      "pl-300-power-bi-data-analyst": "Microsoft Certified: Power BI Data Analyst Associate (PL-300)"
+    };
+    const key = new URLSearchParams(location.search).get("c");
+    if (key && Object.prototype.hasOwnProperty.call(CERTS, key)) {
+      const src = "certificates/" + key + ".jpg", img = document.getElementById("cert");
+      img.src = src; img.alt = CERTS[key];
+      document.getElementById("pdf").href = "certificates/" + key + ".pdf";
+      document.title = CERTS[key] + " | Mohsin Chaudhary";
+    } else {
+      document.getElementById("stage").style.display = "none";
+      document.getElementById("err").style.display = "grid";
+    }
+    document.getElementById("rot").addEventListener("click", e => {
+      document.body.classList.toggle("fill");
+      e.currentTarget.textContent = document.body.classList.contains("fill") ? "⟲ Turn back" : "⟲ Fill screen";
+    });
+    addEventListener("keydown", e => { if (e.key === "Escape") location.href = "./#projects"; });
+  </script>
+</body>
+</html>
