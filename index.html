@@ -23,7 +23,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
   <style>
     /* ================= Colour tokens ================= */
@@ -38,6 +38,9 @@
       --accent-2: #a78bfa;        /* violet: secondary glow */
       --on-accent: #06241f;       /* text colour on mint buttons */
       --glow: rgba(94, 234, 212, .18);
+      --name-a: #fbbf24;          /* warm gold to coral: the name stands apart from the mint and violet */
+      --name-b: #fb7185;
+      --name-glow: rgba(251, 113, 133, .28);
     }
     /* Light theme, switched by the toggle in the nav */
     :root[data-theme="light"] {
@@ -51,6 +54,9 @@
       --accent-2: #6d4ad6;
       --on-accent: #ffffff;
       --glow: rgba(15, 118, 110, .14);
+      --name-a: #d97706;
+      --name-b: #e11d48;
+      --name-glow: rgba(225, 29, 72, .16);
     }
 
     /* ================= Base ================= */
@@ -164,29 +170,6 @@
       .hero-text { max-width: none; }
     }
 
-    /* Floating skill chips sit over the photo, on the right */
-    .chips { position: absolute; inset: 0; pointer-events: none; }
-    .chip {
-      position: absolute; padding: 8px 14px; border-radius: 12px; font-size: 13px;
-      background: color-mix(in srgb, var(--surface) 88%, transparent); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-      border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(0,0,0,.25);
-      animation: float 6s ease-in-out infinite;
-    }
-    .chip b { color: var(--accent); font-weight: 500; }
-    .chip.c1 { top: 22%; right: 22%; }
-    .chip.c2 { top: 48%; right: 6%; animation-delay: -2s; }
-    .chip.c3 { bottom: 18%; right: 26%; animation-delay: -4s; }
-    @keyframes float { 50% { transform: translateY(-10px); } }
-    /* On phones the chips become a floating row over the bottom of the photo */
-    @media (max-width: 860px) {
-      .chips {
-        inset: auto; left: 0; right: 0; top: calc(62px + min(62vh, 520px) - 112px); height: auto;
-        display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 0 16px; z-index: 2;
-      }
-      .chip { position: static; font-size: 12px; padding: 6px 12px; }
-      .chip.c2 { animation-delay: -1s; } .chip.c3 { animation-delay: -2s; }
-    }
-
     .scroll-hint { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); color: var(--muted); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
     @media (max-height: 720px), (max-width: 860px) { .scroll-hint { display: none; } }
 
@@ -231,8 +214,8 @@
     .stack { display: grid; gap: 18px; }
 
     .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-    a.tag.cert { transition: background .2s, transform .2s; }
-    a.tag.cert:hover { background: color-mix(in srgb, var(--accent) 24%, transparent); transform: translateY(-1px); }
+    .cert-tile { transition: background .2s, transform .2s; }
+    .cert-tile:hover { background: color-mix(in srgb, var(--accent) 24%, transparent); transform: translateY(-1px); }
     .tag { font-size: 13px; padding: 4px 12px; border-radius: 999px; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
 
     /* Skill filter */
@@ -313,7 +296,7 @@
     @keyframes fadein { from { opacity: 0; } }
     .hero-photo { animation: fadein 1.4s ease both; }
     /* Photo and chips drift slightly with the mouse (set from the script) */
-    .hero-photo, .chips { will-change: transform; }
+    .hero-photo { will-change: transform; }
     /* A soft spotlight follows the cursor across any card */
     .card::after {
       content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .3s;
@@ -333,6 +316,178 @@
       .filter:active, .topics span:active { transform: scale(.94); }
     }
 
+
+    /* ================= Clean headline, soft backgrounds, quiet buttons ================= */
+    .hello { margin: 18px 0 2px; }
+    .hello .hi { display: block; font-family: "Fraunces", serif; font-weight: 700; font-size: clamp(26px, 4.2vw, 34px); line-height: 1.1; letter-spacing: -.01em; color: var(--text); -webkit-text-stroke: .7px var(--text); margin-bottom: 2px; }
+    .hello .name {
+      display: block; font-family: "Fraunces", serif; font-weight: 700; line-height: 1.05; letter-spacing: -.02em; white-space: nowrap;
+      font-size: clamp(34px, 7.4vw, 53px);
+      background: linear-gradient(100deg, var(--name-a), var(--name-b)); -webkit-background-clip: text; background-clip: text; color: transparent;
+      filter: drop-shadow(0 0 18px var(--name-glow));
+    }
+    .hero h1.mega { font-size: clamp(34px, 7.2vw, 56px); line-height: 1.04; letter-spacing: -.025em; margin: 6px 0 16px; }
+    .mega .line { display: block; white-space: nowrap; }
+    .hero h1.mega .grad {
+      background: linear-gradient(100deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .role-line { min-height: 3.4em; }
+    @media (min-width: 861px) { .role-line { min-height: 1.9em; } }
+    .hero-points { list-style: none; display: grid; gap: 8px; margin: 14px 0 26px; max-width: 460px; }
+    .hero-points li { position: relative; padding-left: 26px; color: var(--muted); font-size: 16px; }
+    .hero-points li::before { content: "▹"; position: absolute; left: 4px; color: var(--accent); font-weight: 700; }
+    .hero-text > :nth-child(7) { animation-delay: .76s; }
+    .hero-text > :nth-child(8) { animation-delay: .88s; }
+    /* Phones: leave room under the text for the skill field */
+    @media (max-width: 860px) { .hero { padding-bottom: 250px; } }
+
+    /* Soft colour glows behind About and Experience (very slow) */
+    section.block, .stats, .contact { position: relative; overflow: hidden; }
+    section.block > .wrap, .stats > .wrap, .contact > .wrap { position: relative; z-index: 1; }
+    .bg-aurora { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+    .bg-aurora i { position: absolute; width: 60vmax; height: 60vmax; border-radius: 50%; animation: drift 40s ease-in-out infinite alternate; will-change: transform; }
+    .bg-aurora i:nth-child(1) { left: -18vmax; top: -20vmax; background: radial-gradient(circle, var(--accent) 0%, transparent 62%); opacity: .1; }
+    .bg-aurora i:nth-child(2) { right: -20vmax; top: 8%; background: radial-gradient(circle, var(--accent-2) 0%, transparent 62%); opacity: .09; animation-duration: 48s; }
+    .bg-aurora i:nth-child(3) { display: none; }
+    .bg-aurora.alt i:nth-child(1) { left: auto; right: -18vmax; background: radial-gradient(circle, var(--accent-2) 0%, transparent 62%); }
+    .bg-aurora.alt i:nth-child(2) { right: auto; left: -20vmax; background: radial-gradient(circle, var(--accent) 0%, transparent 62%); }
+    @keyframes drift { to { transform: translate(6vmax, 4vmax) scale(1.1); } }
+    .stats .wrap { padding-block: 34px; }
+    .stats-title { grid-column: 1 / -1; margin-bottom: 0; }
+    .about-line { color: var(--text); font-size: 18px; margin-bottom: 14px; }
+    .card-cta { margin-top: 16px; }
+    .btn.small { padding: 9px 16px; }
+
+    /* Buttons: a soft ripple where you click or tap, and a small press */
+    .btn, .filter, .icon-btn, .topics span, .cert-tile, .socials a { position: relative; overflow: hidden; -webkit-tap-highlight-color: transparent; }
+    .ripple { position: absolute; border-radius: 50%; pointer-events: none; background: currentColor; opacity: .22; transform: scale(0); animation: ripple .6s ease-out forwards; }
+    @keyframes ripple { to { transform: scale(1); opacity: 0; } }
+    .btn:active, .filter:active, .topics span:active, .cert-tile:active { transform: scale(.96); }
+    .topics input:checked + span { animation: popchip .3s ease; }
+    @keyframes popchip { 50% { transform: scale(1.06); } }
+    .links a.plain { position: relative; }
+    .links a.plain::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .3s; }
+    .links a.plain:hover::after { transform: scaleX(1); }
+    @media (hover: none) { .btn:hover { transform: none; } }
+
+
+    .midfx { position: relative; }
+    .midcanvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+
+    /* ================= More life in the middle and bottom ================= */
+    /* Buttons: shimmer on hover or press, arrow that slides, soft lift */
+    .btn::after, .filter::after, .cert-tile::after {
+      content: ""; position: absolute; inset: 0; pointer-events: none; transform: translateX(-130%);
+      background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.28) 50%, transparent 70%);
+    }
+    .btn:hover::after, .btn:focus-visible::after, .btn:active::after,
+    .filter:hover::after, .filter:active::after, .cert-tile:hover::after, .cert-tile:active::after { animation: sweep .75s ease; }
+    @keyframes sweep { to { transform: translateX(130%); } }
+    .btn .arr { display: inline-block; transition: transform .25s ease; }
+    .btn:hover .arr, .btn:active .arr { transform: translateX(5px); }
+    .btn:hover .arr.up, .btn:active .arr.up { transform: translate(3px, -3px); }
+    .btn:hover { box-shadow: 0 8px 24px var(--glow); }
+    .icon-btn:hover { transform: rotate(30deg); }
+    .filter:hover, .topics label:hover span { transform: translateY(-2px); }
+    .cert-tile:hover { transform: translateY(-2px); background: color-mix(in srgb, var(--accent) 24%, transparent); }
+    .socials a { transition: color .2s, transform .2s; }
+    .socials a:hover { transform: translateY(-2px); }
+
+    /* Headings: a small line grows from the eyebrow, and a bar draws under the title */
+    .eyebrow::after { content: ""; display: inline-block; width: 0; height: 1px; margin-left: 12px; vertical-align: middle; background: var(--accent); transition: width .9s .2s ease; }
+    .reveal.in .eyebrow::after, .eyebrow.reveal.in::after { width: 56px; }
+    section.block h2::after { content: ""; display: block; height: 3px; width: 0; margin-top: 14px; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .9s .35s cubic-bezier(.2,.7,.2,1); }
+    .reveal.in h2::after, h2.reveal.in::after { width: 64px; }
+    .contact h2::after { margin-inline: 0; }
+
+    /* Bullets slide in one after another, tags pop in */
+    .js .reveal li { opacity: 0; transform: translateX(-12px); transition: opacity .5s ease, transform .5s ease; }
+    .js .reveal.in li { opacity: 1; transform: none; transition-delay: calc(var(--i, 0) * 80ms + .3s); }
+    .js .card.reveal .tag { opacity: 0; transform: scale(.85); transition: opacity .4s ease, transform .4s ease, background .2s; }
+    .js .card.reveal.in .tag { opacity: 1; transform: none; transition-delay: calc(var(--j, 0) * 60ms + .7s); }
+    .js .card.reveal.in .cert-tile { transition-delay: 0s; }
+
+    /* About: the photo is unveiled; stats strip has a light that travels along it */
+    .js .about-photo { clip-path: inset(0 0 100% 0 round 18px); transition: clip-path 1.1s cubic-bezier(.2,.7,.2,1) .15s; }
+    .js .reveal.in .about-photo { clip-path: inset(0 0 0 0 round 18px); }
+    .stats::before { content: ""; position: absolute; top: 0; left: 0; height: 2px; width: 32%; background: linear-gradient(90deg, transparent, var(--accent), transparent); animation: slide 6s linear infinite; }
+    @keyframes slide { from { transform: translateX(-100%); } to { transform: translateX(320%); } }
+
+    /* Skills: a bar sweeps across the top of a card when you hover or tap it */
+    .skill-card::before { content: ""; position: absolute; left: 24px; right: 24px; top: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transform: scaleX(0); transform-origin: left; transition: transform .5s ease; }
+    .skill-card:hover::before, .skill-card.touched::before { transform: scaleX(1); }
+
+    /* Experience: a timeline whose line fills as you scroll, with a dot that lights up for each job */
+    .stack { position: relative; padding-left: 32px; }
+    .stack::before { content: ""; position: absolute; left: 6px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
+    .stack::after { content: ""; position: absolute; left: 6px; top: 8px; width: 2px; height: calc((100% - 16px) * var(--tl, 0)); background: linear-gradient(var(--accent), var(--accent-2)); box-shadow: 0 0 12px var(--glow); }
+    .stack > .card::before { content: ""; position: absolute; left: -33px; top: 30px; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 2px solid var(--line); transition: all .6s ease; }
+    .stack > .card.in::before { border-color: var(--accent); background: var(--accent); box-shadow: 0 0 0 6px var(--glow); }
+
+    /* Projects: big outlined numbers that light up */
+    #projects .grid-2 { counter-reset: proj; }
+    #projects .grid-2 .card { counter-increment: proj; }
+    #projects .grid-2 .card::before {
+      content: "0" counter(proj); position: absolute; top: 14px; right: 20px; font-family: "Fraunces", serif; font-size: 46px; font-weight: 700; line-height: 1;
+      color: transparent; -webkit-text-stroke: 1px var(--line); transition: -webkit-text-stroke-color .3s, transform .4s;
+    }
+    #projects .grid-2 .card:hover::before, #projects .grid-2 .card.touched::before { -webkit-text-stroke-color: var(--accent); transform: translateY(-4px); }
+    #projects .card h3 { padding-right: 56px; }
+
+    /* Contact: a light runs around the form card */
+    .form-card { position: relative; overflow: hidden; }
+    .form-card::before { content: ""; position: absolute; inset: -60%; background: conic-gradient(from 0deg, transparent 0 72%, var(--accent) 86%, var(--accent-2) 100%); animation: spin 9s linear infinite; }
+    .form-card::after { content: ""; position: absolute; inset: 1px; border-radius: 19px; background: var(--surface); }
+    .form-card > * { position: relative; z-index: 1; }
+    .form-card > .hp { position: absolute; }
+    .contact-points li { transition: transform .25s; } .contact-points li:hover { transform: translateX(6px); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Back to top button */
+    #totop { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 40; width: 48px; height: 48px; border-radius: 50%; cursor: pointer;
+      background: var(--accent); color: var(--on-accent); border: 0; overflow: hidden; font-size: 20px; font-weight: 700; opacity: 0; transform: translateY(20px) scale(.8); pointer-events: none; transition: opacity .3s, transform .3s, box-shadow .3s; }
+    #totop.show { opacity: 1; transform: none; pointer-events: auto; }
+    #totop:hover { box-shadow: 0 8px 24px var(--glow); transform: translateY(-3px); }
+
+
+    /* ================= Projects pipeline and contact globe ================= */
+    .sectfx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+    #projects .card { background: color-mix(in srgb, var(--surface) 80%, transparent); }
+    @media (max-width: 860px) { #projects .card { background: color-mix(in srgb, var(--surface) 58%, transparent); } }
+    section.contact { padding-bottom: 270px; }
+    @media (max-width: 860px) { section.contact { padding-bottom: 250px; } }
+
+
+    /* ================= Certifications: big tiles scattered across the space ================= */
+    .cert-cloud { position: relative; margin-top: 8px; display: flex; flex-direction: column; gap: 26px; }
+    .cert-tile {
+      display: block; padding: 22px 26px; border-radius: 20px; text-decoration: none; width: min(88%, 380px);
+      background: linear-gradient(145deg, color-mix(in srgb, var(--accent) 13%, var(--surface)), var(--surface));
+      border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--line)); box-shadow: 0 14px 34px rgba(0,0,0,.22);
+      rotate: var(--r, 0deg); transition: transform .3s ease, box-shadow .3s ease, rotate .3s ease, border-color .3s;
+    }
+    .cert-tile:hover, .cert-tile:active { transform: translateY(-6px) scale(1.03); rotate: 0deg; border-color: var(--accent); box-shadow: 0 22px 46px var(--glow); }
+    .cert-by { display: block; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+    .cert-name { display: block; font-family: "Fraunces", serif; font-weight: 700; font-size: 23px; line-height: 1.2; color: var(--text); }
+    .cert-code { display: block; margin-top: 10px; font-family: "JetBrains Mono", monospace; font-size: 15px; color: var(--muted); }
+    .cert-code .arr-up { color: var(--accent); margin-left: 4px; display: inline-block; transition: transform .25s; }
+    .cert-tile:hover .arr-up { transform: translate(3px, -3px); }
+    .cert-tile:nth-child(1) { --r: -1.6deg; } .cert-tile:nth-child(2) { --r: 1.4deg; margin-left: auto; }
+    .cert-tile:nth-child(3) { --r: -.8deg; margin-left: 10%; } .cert-tile:nth-child(4) { --r: 1.8deg; margin-left: auto; margin-right: 6%; }
+    .cert-tile:nth-child(5) { --r: -1.4deg; } .cert-tile:nth-child(6) { --r: 1deg; margin-left: auto; }
+    /* Wide screens: scattered at different spots, not in rows */
+    @media (min-width: 861px) {
+      .cert-cloud { display: block; height: 620px; }
+      .cert-tile { position: absolute; width: 330px; margin: 0 !important; animation: certdrift 9s ease-in-out infinite alternate; }
+      .cert-tile:nth-child(1) { left: 1%;  top: 12px; }
+      .cert-tile:nth-child(2) { left: 37%; top: 0; animation-delay: -2s; }
+      .cert-tile:nth-child(3) { left: 70%; top: 54px; animation-delay: -4s; }
+      .cert-tile:nth-child(4) { left: 4%;  top: 262px; animation-delay: -6s; }
+      .cert-tile:nth-child(5) { left: 36%; top: 290px; animation-delay: -1s; }
+      .cert-tile:nth-child(6) { left: 69%; top: 380px; animation-delay: -3s; }
+    }
+    @keyframes certdrift { to { translate: 0 -10px; } }
+
     /* ================= Scroll reveal ================= */
     .js .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
     .js .reveal.in { opacity: 1; transform: none; }
@@ -344,7 +499,8 @@
     /* Respect people who turn animations off */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
-      .js .reveal { opacity: 1; transform: none; }
+      .js .reveal, .js .reveal li, .js .card.reveal .tag { opacity: 1; transform: none; }
+      .js .about-photo { clip-path: none; }
       html { scroll-behavior: auto; }
     }
   </style>
@@ -373,11 +529,6 @@
   <header class="hero" id="top">
     <!-- Hero photo: replace photo-2.jpg to change it. It fills the right side and fades into the background. -->
     <img class="hero-photo" src="photo-2.jpg" width="900" height="1125" alt="Mohsin Chaudhary in a navy suit">
-    <div class="chips" aria-hidden="true">
-      <span class="chip c1 mono"><b>●</b> Python · SQL</span>
-      <span class="chip c2 mono"><b>●</b> Azure ML · Fabric</span>
-      <span class="chip c3 mono"><b>●</b> LLMs · RAG</span>
-    </div>
     <canvas id="net" aria-hidden="true"></canvas>
 
     <div class="wrap">
@@ -385,15 +536,23 @@
       <div class="hero-text">
         <span class="status"><span class="dot"></span> Data Scientist · London, UK</span>
 
-        <h1>Hi, I'm <span class="grad">Mohsin Chaudhary.</span></h1>
+        <p class="hello"><span class="hi">Hi, I'm</span><span class="name">Mohsin Chaudhary</span></p>
+
+        <!-- The big headline -->
+        <h1 class="mega" id="mega">
+          <span class="line">Microsoft</span>
+          <span class="line">Certified</span>
+          <span class="line grad">Data Scientist</span>
+        </h1>
 
         <!-- Rotating line, typed by the script below -->
-        <p class="role-line">I'm a Microsoft Certified Data Scientist who <span class="typed" id="typed"></span><span class="caret"></span></p>
+        <p class="role-line">I <span class="typed" id="typed"></span><span class="caret"></span></p>
 
-        <p class="lede">
-          I turn data into something people can understand and act on. I care about models that are
-          honest, explainable and useful in the real world, not just accurate on a slide.
-        </p>
+        <ul class="hero-points">
+          <li>Risk models and forecasting for public services</li>
+          <li>LLM and RAG solutions on Azure</li>
+          <li>Explainable, governed, production-ready ML</li>
+        </ul>
 
         <div class="cta">
           <a class="btn primary" href="#projects">See my work →</a>
@@ -417,28 +576,34 @@
   <!-- ================= Stats strip (numbers count up when scrolled into view) ================= -->
   <div class="stats">
     <div class="wrap">
-      <div class="stat reveal"><div class="num" data-target="6">0</div><div class="lbl">Microsoft certifications across AI, data and Power BI</div></div>
-      <div class="stat reveal"><div class="num txt">Gold</div><div class="lbl">Hallam Gold Award holder, Sheffield Hallam University</div></div>
-      <div class="stat reveal"><div class="num txt">3 hrs → 20 min</div><div class="lbl">Policy lookup time for 60+ staff, using an LLM tool I built at Somerset Council</div></div>
+      <p class="eyebrow stats-title reveal">Achievements</p>
+      <div class="stat reveal"><div class="num" data-target="6">0</div><div class="lbl">Microsoft certifications</div></div>
+      <div class="stat reveal"><div class="num txt">Gold</div><div class="lbl">Hallam Gold Award holder</div></div>
+      <div class="stat reveal"><div class="num txt">3 hrs → 20 min</div><div class="lbl">Policy lookup for 60+ staff, using an LLM tool I built at Somerset Council</div></div>
     </div>
   </div>
 
   <main>
 
+    <!-- ================= Middle of the page: About, Skills, Experience share one floating maths and AI background ================= -->
+    <div class="midfx" id="midfx">
+    <canvas class="midcanvas" id="mid" aria-hidden="true"></canvas>
+
     <!-- ================= About ================= -->
     <section class="block" id="about">
+      <div class="bg-aurora" aria-hidden="true"><i></i><i></i><i></i></div>
       <div class="wrap about-grid">
         <div class="reveal">
           <p class="eyebrow">About</p>
-          <h2>Machine learning people can actually trust.</h2>
-          <p>I'm a <strong>Microsoft Certified data scientist based in London, UK</strong>, building AI, machine learning and data engineering solutions for public services, from Adult Social Care and Housing to Children's Services. Before that, I worked on water-quality and leakage telemetry at Wessex Water.</p>
+          <h2>From messy data to decisions people can trust.</h2>
+          <p class="about-line">Microsoft Certified data scientist building AI and data solutions for public services.</p>
           <ul class="wins">
-            <li><strong>Risk model with real reach:</strong> 0.86 AUC and 81% recall, surfacing the top 15% highest-risk cases from a waiting list of about 4,000.</li>
-            <li><strong>Time handed back to caseworkers:</strong> a triage tool that cut manual case review by about 40%, saving roughly 12 hours of effort every week.</li>
-            <li><strong>Faster, safer delivery:</strong> MLOps and CI/CD that took release cycles from 2 weeks to 2 days.</li>
-            <li><strong>Earlier warnings:</strong> leaks flagged up to 48 hours sooner, and recall on rare river-quality events lifted from 0.58 to 0.79.</li>
+            <li><strong>Risk model:</strong> 0.86 AUC and 81% recall on a waiting list of about 4,000.</li>
+            <li><strong>Triage tool:</strong> about 40% less manual review, roughly 12 hours saved a week.</li>
+            <li><strong>MLOps:</strong> release cycles cut from 2 weeks to 2 days.</li>
+            <li><strong>Early warnings:</strong> leaks flagged up to 48 hours sooner.</li>
+            <li><strong>Trust first:</strong> explainable models, data lineage, responsible AI.</li>
           </ul>
-          <p>What ties it together is trust: <strong>explainable models</strong>, clear data lineage, responsible AI, and pipelines that keep running long after the demo.</p>
         </div>
         <div class="reveal">
           <img class="about-photo" src="photo.jpg" width="900" height="1125" loading="lazy" alt="Mohsin Chaudhary seated in a white shirt">
@@ -447,9 +612,10 @@
             <p class="meta">The short version</p>
             <ul>
               <li>Based in London, UK</li>
-              <li>6 Microsoft certifications, including Azure AI Engineer and Azure Data Scientist</li>
-              <li>Works across Python, SQL, Azure, Microsoft Fabric and Azure OpenAI</li>
-              <li>MSc Big Data Analytics, Sheffield Hallam University</li>
+              <li>6 Microsoft certifications</li>
+              <li>Python, SQL, Azure, Fabric, Azure AutoML with Agentic AI</li>
+              <li><strong>Master's in Data Science</strong>, Sheffield Hallam University, Sheffield, United Kingdom</li>
+              <li><strong>Bachelor of Technology in Computer Science</strong>, Amity University, New Delhi, India</li>
             </ul>
           </div>
         </div>
@@ -474,22 +640,22 @@
         <div class="grid-2">
           <div class="card skill-card reveal" data-cat="ml" data-tilt>
             <h3>Predictive modelling</h3>
-            <p>Risk scoring, deterioration detection and demand forecasting.</p>
+            <ul><li>Risk scoring</li><li>Deterioration detection</li><li>Demand forecasting</li></ul>
             <div class="tags"><span class="tag">Python</span><span class="tag">Azure ML</span><span class="tag">Forecasting</span></div>
           </div>
           <div class="card skill-card reveal" data-cat="data" data-tilt>
             <h3>Data engineering</h3>
-            <p>End-to-end ML pipelines with CI/CD, so models keep running after launch.</p>
+            <ul><li>End-to-end ML pipelines</li><li>CI/CD and monitoring</li></ul>
             <div class="tags"><span class="tag">SQL</span><span class="tag">Microsoft Fabric</span><span class="tag">MLOps</span></div>
           </div>
           <div class="card skill-card reveal" data-cat="llm" data-tilt>
             <h3>LLM solutions</h3>
-            <p>Prompt design and validation, plus retrieval-augmented generation over documents.</p>
-            <div class="tags"><span class="tag">Azure OpenAI</span><span class="tag">RAG</span><span class="tag">Knowledge graphs</span></div>
+            <ul><li>Prompt design and validation</li><li>RAG over documents</li></ul>
+            <div class="tags"><span class="tag">Azure AutoML</span><span class="tag">Agentic AI</span><span class="tag">RAG</span><span class="tag">Knowledge graphs</span></div>
           </div>
           <div class="card skill-card reveal" data-cat="gov" data-tilt>
             <h3>Governance and trust</h3>
-            <p>Explainable outputs, data lineage and model governance on sensitive public-sector data.</p>
+            <ul><li>Explainable outputs</li><li>Data lineage and governance</li></ul>
             <div class="tags"><span class="tag">Explainable AI</span><span class="tag">Data lineage</span></div>
           </div>
         </div>
@@ -498,33 +664,32 @@
 
     <!-- ================= Experience ================= -->
     <section class="block" id="work">
+      <div class="bg-aurora alt" aria-hidden="true"><i></i><i></i><i></i></div>
       <div class="wrap">
         <p class="eyebrow reveal">Experience</p>
         <h2 class="reveal">Where I've worked</h2>
         <div class="stack">
           <div class="card reveal" data-tilt>
             <h3>Data Scientist, Somerset Council</h3>
-            <p class="meta">July 2026 – present · Government administration</p>
+            <p class="meta">Taunton, United Kingdom · July 2026 – present · Government administration</p>
             <ul>
-              <li>Deliver AI and ML across Adult Social Care, Housing and Children's Services, supporting services for over 570,000 residents.</li>
-              <li>Built risk-scoring models reaching 0.86 AUC and 81% recall, surfacing the top 15% highest-risk cases from a waiting list of about 4,000.</li>
-              <li>Built a 3-engine risk prioritisation tool (waiting-list ranking, deterioration detection, demand forecasting) with a triage UI, cutting manual case review by about 40% and roughly 12 hours of weekly triage effort.</li>
-              <li>Set up MLOps and CI/CD with a Dev/UAT/Prod branch strategy, cutting release cycles from 2 weeks to 2 days.</li>
-              <li>Built LLM tools on Azure AI that cut document and policy lookup from about 3 hours to under 20 minutes for 60+ staff.</li>
-              <li>Data scientist on placement forecasting for Children's Services to support medium-term financial planning.</li>
-              <li>Apply model governance, explainable AI and data lineage to every model taken to production.</li>
+              <li><strong>Scope:</strong> AI and ML across Adult Social Care, Housing and Children's Services, for 570,000+ residents.</li>
+              <li><strong>Risk models:</strong> 0.86 AUC, 81% recall, surfacing the top 15% of a waiting list of about 4,000.</li>
+              <li><strong>Triage tool:</strong> about 40% less manual case review, roughly 12 hours saved every week.</li>
+              <li><strong>MLOps:</strong> Dev/UAT/Prod CI/CD cut releases from 2 weeks to 2 days.</li>
+              <li><strong>LLM tools:</strong> policy lookup from 3 hours to under 20 minutes for 60+ staff.</li>
             </ul>
-            <div class="tags"><span class="tag">Python</span><span class="tag">SQL</span><span class="tag">Azure ML</span><span class="tag">Microsoft Fabric</span><span class="tag">Azure OpenAI</span></div>
+            <div class="tags"><span class="tag">Python</span><span class="tag">SQL</span><span class="tag">Azure ML</span><span class="tag">Microsoft Fabric</span><span class="tag">Azure AutoML</span><span class="tag">Agentic AI</span></div>
           </div>
           <div class="card reveal" data-tilt>
-            <h3>Data Scientist, Wessex Water</h3>
-            <p class="meta">June 2024 – December 2025</p>
-            <p>Applied machine learning and data engineering to water network and river data, turning raw telemetry into earlier warnings and decisions operational teams could act on.</p>
+            <h3>Data Scientist, Wessex Water (YTL Group)</h3>
+            <p class="meta">Bath, United Kingdom · June 2024 – December 2025</p>
             <ul>
-              <li><strong>River water quality prediction:</strong> built classification models for E. coli and Enterococci levels. Tackling severe class imbalance with SMOTE and threshold tuning raised recall on the rare, high-risk class from 0.58 to 0.79, so far fewer poor-quality events went unflagged. Models were trained and versioned in Azure ML pipelines.</li>
-              <li><strong>Leakage detection from flow and pressure data:</strong> designed anomaly detection that combined statistical modelling with threshold-based alerting, flagging potential leaks up to 48 hours earlier than manual review.</li>
-              <li><strong>Telemetry data pipelines:</strong> automated ingestion and transformation in Azure Data Factory, PySpark and Databricks across 10 million+ rows of time-series data, saving about 8 hours of manual data preparation every week. Used KQL and SQL in Synapse and Log Analytics to trace data quality failures to their root cause.</li>
-              <li><strong>Reporting for operations:</strong> delivered 5 Power BI dashboards used by 40+ operational staff, and presented findings to non-technical stakeholders.</li>
+              <li><strong>River water quality:</strong> E. coli and Enterococci classifiers, recall lifted from 0.58 to 0.79.</li>
+              <li><strong>Leak detection:</strong> anomaly detection flagged leaks up to 48 hours earlier.</li>
+              <li><strong>Pipelines:</strong> Data Factory, PySpark and Databricks over 10M+ rows, saving about 8 hours a week.</li>
+              <li><strong>Root cause:</strong> KQL and SQL in Synapse and Log Analytics traced data quality failures.</li>
+              <li><strong>Reporting:</strong> 5 Power BI dashboards used by 40+ operational staff.</li>
             </ul>
             <div class="tags"><span class="tag">Azure ML</span><span class="tag">PySpark</span><span class="tag">Databricks</span><span class="tag">Anomaly detection</span><span class="tag">KQL</span><span class="tag">Power BI</span></div>
           </div>
@@ -532,8 +697,11 @@
       </div>
     </section>
 
+    </div>
+
     <!-- ================= Projects ================= -->
     <section class="block" id="projects" style="background:var(--bg-2);border-block:1px solid var(--line)">
+      <canvas class="sectfx" id="flow" aria-hidden="true"></canvas>
       <div class="wrap">
         <p class="eyebrow reveal">Projects</p>
         <h2 class="reveal">Things I've built</h2>
@@ -541,54 +709,79 @@
           <div class="card reveal" data-tilt>
             <h3>Knowledge-graph RAG over scientific papers</h3>
             <p class="meta">Independent project · June 2026</p>
-            <p>Question answering over scientific documents that retrieves across text, page layout and figures, and a knowledge graph (about 11,800 nodes, 17,700 edges) of LLM-extracted entities. Sentence-transformer and CLIP embeddings are fused with graph traversal, and every answer must cite its supporting chunk, figure region or graph fact.</p>
-            <p><span class="big-number">0.97 vs 0.53</span><br>mean evidence recall, graph-enhanced vs baseline, on a 10-question test.</p>
+            <ul><li>Answers questions across text, figures and a knowledge graph</li><li>About 11,800 nodes and 17,700 edges, built with LLMs</li><li>Every answer cites its supporting evidence</li></ul>
+            <p><span class="big-number">0.97 vs 0.53</span> evidence recall, graph vs baseline</p>
             <div class="tags"><span class="tag">OCR</span><span class="tag">NetworkX</span><span class="tag">CLIP</span><span class="tag">spaCy</span></div>
-            <p style="margin-top:14px"><a href="https://github.com/aimldlds/PUBLAYER-RAG" target="_blank" rel="noopener">View on GitHub →</a></p>
+            <div class="card-cta"><a class="btn small" href="https://github.com/aimldlds/PUBLAYER-RAG" target="_blank" rel="noopener">View on GitHub →</a></div>
           </div>
           <div class="card reveal" data-tilt>
             <h3>Medical Recommendation System</h3>
             <p class="meta">MSc dissertation</p>
-            <p>A web app that takes reported symptoms and health data and suggests likely conditions and personalised recommendations. It mixes machine learning with rule-based logic, built end to end and deployed on Heroku.</p>
+            <ul><li>Symptoms and health data in, likely conditions out</li><li>Machine learning combined with rule-based logic</li><li>Built end to end and deployed on Heroku</li></ul>
             <div class="tags"><span class="tag">Machine learning</span><span class="tag">Web app</span><span class="tag">Heroku</span></div>
-            <p style="margin-top:14px"><a href="https://github.com/aimldlds/MedicalRecommendationSystem" target="_blank" rel="noopener">View on GitHub →</a></p>
+            <div class="card-cta"><a class="btn small" href="https://github.com/aimldlds/MedicalRecommendationSystem" target="_blank" rel="noopener">View on GitHub →</a></div>
           </div>
           <div class="card reveal" data-tilt>
             <h3>IPL win probability predictor</h3>
             <p class="meta">End-to-end project · 2022</p>
-            <p>Predicts the winning and losing probability of the chasing team in an IPL match with logistic regression, from live features such as current and required run rate, wickets left, runs left and balls left. Deployed as a web app on Heroku.</p>
+            <ul><li>Live win probability for the chasing team</li><li>Logistic regression on run rate, wickets and balls left</li><li>Deployed as a web app on Heroku</li></ul>
             <div class="tags"><span class="tag">Logistic regression</span><span class="tag">Scikit-Learn</span><span class="tag">Heroku</span></div>
-            <p style="margin-top:14px"><a href="https://github.com/aimldlds/Ipl-win-Probability-Predictor" target="_blank" rel="noopener">View on GitHub →</a></p>
+            <div class="card-cta"><a class="btn small" href="https://github.com/aimldlds/Ipl-win-Probability-Predictor" target="_blank" rel="noopener">View on GitHub →</a></div>
           </div>
           <div class="card reveal" data-tilt>
             <h3>Laptop price predictor</h3>
             <p class="meta">End-to-end project · 2022</p>
-            <p>A Random Forest regression model that predicts laptop prices from brand, type, RAM, weight, CPU, GPU, resolution, storage and OS, with feature engineering to pull hidden signal out of the raw columns. Deployed as a web app on Heroku.</p>
+            <ul><li>Random Forest price model with engineered features</li><li>Uses brand, RAM, CPU, GPU, screen and storage</li><li>Deployed as a web app on Heroku</li></ul>
             <div class="tags"><span class="tag">Random Forest</span><span class="tag">Feature engineering</span><span class="tag">Heroku</span></div>
-            <p style="margin-top:14px"><a href="https://github.com/aimldlds/Laptop-Price-Predictor" target="_blank" rel="noopener">View on GitHub →</a></p>
+            <div class="card-cta"><a class="btn small" href="https://github.com/aimldlds/Laptop-Price-Predictor" target="_blank" rel="noopener">View on GitHub →</a></div>
           </div>
         </div>
 
         <h3 class="reveal" style="margin:44px 0 6px;font-size:24px">Certifications</h3>
         <p class="reveal" style="color:var(--muted);font-size:14px;margin-bottom:14px">Click a certification to view the certificate.</p>
-        <div class="tags reveal">
-          <a class="tag cert" href="certificates/dp-800-sql-ai-developer.pdf" target="_blank" rel="noopener">Microsoft Certified: SQL AI Developer Associate (DP-800) ↗</a>
-          <a class="tag cert" href="certificates/ai-102-azure-ai-engineer.pdf" target="_blank" rel="noopener">Microsoft Certified: Azure AI Engineer Associate (AI-102) ↗</a>
-          <a class="tag cert" href="certificates/dp-100-azure-data-scientist.pdf" target="_blank" rel="noopener">Microsoft Certified: Azure Data Scientist Associate (DP-100) ↗</a>
-          <a class="tag cert" href="certificates/dp-600-fabric-analytics-engineer.pdf" target="_blank" rel="noopener">Microsoft Certified: Fabric Analytics Engineer Associate (DP-600) ↗</a>
-          <a class="tag cert" href="certificates/dp-700-fabric-data-engineer.pdf" target="_blank" rel="noopener">Microsoft Certified: Fabric Data Engineer Associate (DP-700) ↗</a>
-          <a class="tag cert" href="certificates/pl-300-power-bi-data-analyst.pdf" target="_blank" rel="noopener">Microsoft Certified: Power BI Data Analyst Associate (PL-300) ↗</a>
+        <div class="cert-cloud reveal">
+          <a class="cert-tile" href="certificates/dp-800-sql-ai-developer.pdf" target="_blank" rel="noopener">
+            <span class="cert-by">Microsoft Certified:</span>
+            <span class="cert-name">SQL AI Developer Associate</span>
+            <span class="cert-code">(DP-800) <span class="arr-up">↗</span></span>
+          </a>
+          <a class="cert-tile" href="certificates/ai-102-azure-ai-engineer.pdf" target="_blank" rel="noopener">
+            <span class="cert-by">Microsoft Certified:</span>
+            <span class="cert-name">Azure AI Engineer Associate</span>
+            <span class="cert-code">(AI-102) <span class="arr-up">↗</span></span>
+          </a>
+          <a class="cert-tile" href="certificates/dp-100-azure-data-scientist.pdf" target="_blank" rel="noopener">
+            <span class="cert-by">Microsoft Certified:</span>
+            <span class="cert-name">Azure Data Scientist Associate</span>
+            <span class="cert-code">(DP-100) <span class="arr-up">↗</span></span>
+          </a>
+          <a class="cert-tile" href="certificates/dp-600-fabric-analytics-engineer.pdf" target="_blank" rel="noopener">
+            <span class="cert-by">Microsoft Certified:</span>
+            <span class="cert-name">Fabric Analytics Engineer Associate</span>
+            <span class="cert-code">(DP-600) <span class="arr-up">↗</span></span>
+          </a>
+          <a class="cert-tile" href="certificates/dp-700-fabric-data-engineer.pdf" target="_blank" rel="noopener">
+            <span class="cert-by">Microsoft Certified:</span>
+            <span class="cert-name">Fabric Data Engineer Associate</span>
+            <span class="cert-code">(DP-700) <span class="arr-up">↗</span></span>
+          </a>
+          <a class="cert-tile" href="certificates/pl-300-power-bi-data-analyst.pdf" target="_blank" rel="noopener">
+            <span class="cert-by">Microsoft Certified:</span>
+            <span class="cert-name">Power BI Data Analyst Associate</span>
+            <span class="cert-code">(PL-300) <span class="arr-up">↗</span></span>
+          </a>
         </div>
       </div>
     </section>
 
     <!-- ================= Contact ================= -->
     <section class="block contact" id="contact">
+      <canvas class="sectfx" id="globe" aria-hidden="true"></canvas>
       <div class="wrap contact-grid">
         <div class="reveal">
           <p class="eyebrow">Contact</p>
           <h2>Let's work together.</h2>
-          <p class="contact-lede">Hiring for a data science role, planning a project in public services or health, or just want to talk about ML and LLMs? Send me a note and I'll reply personally.</p>
+          <p class="contact-lede">Hiring, a project or a collaboration? Send a note and I'll reply personally.</p>
           <ul class="contact-points">
             <li><span class="pt">✓</span> Data science and machine learning</li>
             <li><span class="pt">✓</span> Data analytics and business intelligence</li>
@@ -626,6 +819,7 @@
   </main>
 
   <footer>© <span id="year"></span> Mohsin Chaudhary · mohsinchaudhary.com</footer>
+  <button id="totop" aria-label="Back to top">↑</button>
 
   <script>
     /* ---------- Footer year ---------- */
@@ -644,10 +838,10 @@
 
     /* ---------- Typed role line ---------- */
     const phrases = [
-      "turns messy data into clear answers.",
-      "builds models people can explain and trust.",
-      "works with machine learning and LLMs.",
-      "builds on Azure with Python and SQL."
+      "turn messy data into clear answers.",
+      "build models people can explain and trust.",
+      "work with machine learning and LLMs.",
+      "build on Azure with Python and SQL."
     ];
     const typedEl = document.getElementById("typed");
     let pi = 0, ci = 0, deleting = false;
@@ -661,69 +855,134 @@
     }
     if (reduceMotion) typedEl.textContent = phrases[0]; else type();
 
-    /* ---------- Network graph behind the hero ----------
-       Dots drift slowly and link up when close. The mouse pulls nearby dots in,
-       like a knowledge graph forming around the cursor. */
+    /* ---------- Skill field behind the hero ----------
+       Your skills sit in the empty parts of the hero as clear labels, joined by faint lines.
+       Move the mouse or touch near one and it lights up with its neighbours.
+       Click or tap anywhere in the hero and a soft ring spreads out, lighting each skill as it passes. */
     const canvas = document.getElementById("net");
     const ctx = canvas.getContext("2d");
     const hero = document.querySelector(".hero");
-    let W, H, dots = [], mouse = { x: -999, y: -999 }, heroVisible = true, accent = "94,234,212";
+    const SKILLS = ["Python", "SQL", "Azure ML", "Microsoft Fabric", "Azure AutoML", "Agentic AI", "LLMs", "RAG", "MLOps", "Power BI",
+                    "PySpark", "Databricks", "Forecasting", "Explainable AI", "KQL", "CI/CD"];
+    let W = 0, H = 0, nodes = [], edges = [], pulses = [], spark = null, sparkNext = 1.5;
+    let mouse = { x: -999, y: -999 }, heroVisible = true, accent = "94,234,212", ink = "232,239,236";
 
-    function readColours() {   // turn the CSS accent colour into "r,g,b" for canvas alpha
-      const hex = getComputedStyle(root).getPropertyValue("--accent").trim().replace("#", "");
+    function hexToRgb(hex) {
+      hex = hex.trim().replace("#", "");
       const n = parseInt(hex.length === 3 ? hex.replace(/./g, "$&$&") : hex, 16);
-      accent = [(n >> 16) & 255, (n >> 8) & 255, n & 255].join(",");
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255].join(",");
     }
-    function resize() {
+    function readColours() {   // CSS colours -> "r,g,b" so the canvas can use transparency
+      const cs = getComputedStyle(root);
+      accent = hexToRgb(cs.getPropertyValue("--accent")); ink = hexToRgb(cs.getPropertyValue("--text"));
+    }
+
+    /* Find empty space (not under the text, the photo or the nav) and place as many skill labels as fit */
+    function layout() {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       W = hero.clientWidth; H = hero.clientHeight;
-      canvas.width = W * dpr; canvas.height = H * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const count = Math.min(90, Math.floor((W * H) / 15000));   // fewer dots on small screens
-      dots = Array.from({ length: count }, () => ({
-        x: Math.random() * W, y: Math.random() * H,
-        vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35
-      }));
+      canvas.width = W * dpr; canvas.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const hr = hero.getBoundingClientRect(), blocked = [];
+      const add = (el, pad) => { if (!el) return; const r = el.getBoundingClientRect(); blocked.push([r.left - hr.left - pad, r.top - hr.top - pad, r.right - hr.left + pad, r.bottom - hr.top + pad]); };
+      add(document.querySelector(".hero-text"), 28); add(document.querySelector(".hero-photo"), 0);
+      blocked.push([0, 0, W, 78]);                       // under the nav bar
+      ctx.font = "700 15px 'JetBrains Mono', monospace";
+      nodes = [];
+      const order = SKILLS.map((s, i) => [Math.random(), s]).sort((a, b) => a[0] - b[0]).map(x => x[1]);
+      for (const label of order) {
+        const w = ctx.measureText(label).width + 34, h = 32;
+        for (let tries = 0; tries < 160; tries++) {
+          const x = 16 + Math.random() * (W - w - 32), y = 90 + Math.random() * (H - h - 130);
+          const box = [x - 12, y - 10, x + w + 12, y + h + 10];
+          const hit = blocked.some(b => box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1]) ||
+                      nodes.some(n => box[0] < n.x + n.w + 12 && box[2] > n.x - 12 && box[1] < n.y + 32 + 10 && box[3] > n.y - 10);
+          if (!hit) { nodes.push({ label, x, y, w, ph: Math.random() * 6.28, glow: 0, lit: 0 }); break; }
+        }
+      }
+      // faint lines to the two nearest neighbours
+      const seen = new Set(); edges = [];
+      nodes.forEach((a, i) => {
+        nodes.map((b, j) => [j, Math.hypot(a.x - b.x, a.y - b.y)]).filter(p => p[0] !== i && p[1] < 260).sort((p, q) => p[1] - q[1]).slice(0, 2).forEach(([j]) => {
+          const key = Math.min(i, j) + "-" + Math.max(i, j); if (!seen.has(key)) { seen.add(key); edges.push([i, j]); }
+        });
+      });      if (reduceMotion) draw(0);   // no animation loop in this mode, so redraw once after every layout
     }
-    function draw() {
+
+    const nx = (n, t) => n.x + 6 + Math.sin(t * .4 + n.ph) * 4, ny = (n, t) => n.y + 16 + Math.cos(t * .33 + n.ph) * 3;
+    let lastT = 0;
+    function draw(tms) {
+      const t = tms / 1000, dt = Math.min(t - lastT, .05); lastT = t;
       ctx.clearRect(0, 0, W, H);
-      for (const d of dots) {
-        d.x += d.vx; d.y += d.vy;
-        if (d.x < 0 || d.x > W) d.vx *= -1;     // bounce off the edges
-        if (d.y < 0 || d.y > H) d.vy *= -1;
-        const dx = mouse.x - d.x, dy = mouse.y - d.y, md = Math.hypot(dx, dy);
-        if (md < 160) { d.x += dx * .006; d.y += dy * .006; }   // gentle pull toward the cursor
+      // light up nodes near the pointer or finger, and as a pulse ring passes
+      pulses = pulses.filter(p => (t - p.t0) * 340 < 520);
+      for (const n of nodes) {
+        const x = nx(n, t), y = ny(n, t), d = Math.hypot(mouse.x - x, mouse.y - y);
+        n.glow += ((d < 190 ? Math.min(1, (1 - d / 190) * 1.6) : 0) - n.glow) * .22;
+        for (const p of pulses) if (Math.abs(Math.hypot(p.x - x, p.y - y) - (t - p.t0) * 340) < 30) n.lit = 1;
+        n.lit = Math.max(0, n.lit - dt * .8);
+        n.s = Math.max(n.glow, n.lit);
       }
-      for (let i = 0; i < dots.length; i++) {
-        const a = dots[i];
-        for (let j = i + 1; j < dots.length; j++) {         // link dots that are close together
-          const b = dots[j], dist = Math.hypot(a.x - b.x, a.y - b.y);
-          if (dist < 125) {
-            ctx.strokeStyle = `rgba(${accent},${(1 - dist / 125) * .28})`;
-            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-          }
+      // lines
+      for (const [i, j] of edges) {
+        const a = nodes[i], b = nodes[j], s = Math.max(a.s, b.s);
+        ctx.strokeStyle = "rgba(" + accent + "," + (.1 + s * .55) + ")"; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(nx(a, t), ny(a, t)); ctx.lineTo(nx(b, t), ny(b, t)); ctx.stroke();
+      }
+      // a small spark travels along one line now and then
+      if (!reduceMotion && edges.length) {
+        if (!spark && t > sparkNext) { spark = { e: edges[(Math.random() * edges.length) | 0], t0: t }; }
+        if (spark) {
+          const k = (t - spark.t0) / 1.6, a = nodes[spark.e[0]], b = nodes[spark.e[1]];
+          if (k >= 1) { spark = null; sparkNext = t + 2 + Math.random() * 2; }
+          else { ctx.fillStyle = "rgba(" + accent + ",.85)"; ctx.beginPath(); ctx.arc(nx(a, t) + (nx(b, t) - nx(a, t)) * k, ny(a, t) + (ny(b, t) - ny(a, t)) * k, 2.4, 0, 7); ctx.fill(); }
         }
-        const md = Math.hypot(a.x - mouse.x, a.y - mouse.y);  // link dots to the cursor
-        if (md < 160) {
-          ctx.strokeStyle = `rgba(${accent},${(1 - md / 160) * .6})`;
-          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
-        }
-        ctx.fillStyle = `rgba(${accent},.75)`;
-        ctx.beginPath(); ctx.arc(a.x, a.y, 1.8, 0, 7); ctx.fill();
+      }
+      // soft halo that follows the mouse or finger
+      if (mouse.x > -500) {
+        const g = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 130);
+        g.addColorStop(0, "rgba(" + accent + ",.14)"); g.addColorStop(1, "rgba(" + accent + ",0)");
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(mouse.x, mouse.y, 130, 0, 7); ctx.fill();
+      }
+      // skills: a dot and a clear, bold label that grows when you come near
+      ctx.textBaseline = "middle";
+      for (const n of nodes) {
+        const x = nx(n, t), y = ny(n, t), s = n.s;
+        ctx.fillStyle = "rgba(" + accent + "," + (.7 + s * .3) + ")";
+        ctx.beginPath(); ctx.arc(x, y, 4 + s * 3, 0, 7); ctx.fill();
+        if (s > .05) { ctx.strokeStyle = "rgba(" + accent + "," + s * .55 + ")"; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(x, y, 9 + s * 8, 0, 7); ctx.stroke(); }
+        ctx.font = "700 " + (15 + s * 4) + "px 'JetBrains Mono', monospace";
+        ctx.fillStyle = s > .15 ? "rgba(" + accent + ",1)" : "rgba(" + ink + ",.82)";
+        if (s > .15) { ctx.shadowColor = "rgba(" + accent + ",.7)"; ctx.shadowBlur = 14 * s; }
+        ctx.fillText(n.label, x + 15, y);
+        ctx.shadowBlur = 0;
+      }
+      // pulse rings
+      for (const p of pulses) {
+        const r = (t - p.t0) * 340;
+        ctx.strokeStyle = "rgba(" + accent + "," + Math.max(0, .4 * (1 - r / 520)) + ")"; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 7); ctx.stroke();
       }
     }
-    function loop() {
-      if (heroVisible) draw();            // skip work when the hero is scrolled out of view
-      if (!reduceMotion) requestAnimationFrame(loop);
-    }
-    readColours(); resize();
-    window.addEventListener("resize", resize);
+    function loop(tms) { if (heroVisible) draw(tms); if (!reduceMotion) requestAnimationFrame(loop); }
+
+    readColours(); layout();
+    addEventListener("resize", layout);
+    addEventListener("load", () => setTimeout(layout, 300));
+    setTimeout(layout, 1200);                            // text finishes sliding in, so measure again
     hero.addEventListener("pointermove", e => {
+      if (e.pointerType === "touch") return;
       const r = hero.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
     });
     hero.addEventListener("pointerleave", () => { mouse.x = mouse.y = -999; });
+    hero.addEventListener("click", e => {                  // click or tap: send a ring through the skills
+      if (reduceMotion || e.target.closest("a, button")) return;
+      const r = hero.getBoundingClientRect();
+      pulses.push({ x: e.clientX - r.left, y: e.clientY - r.top, t0: performance.now() / 1000 });
+      mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
+      if (matchMedia("(hover: none)").matches) setTimeout(() => { mouse.x = mouse.y = -999; }, 900);
+    });
     new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; }).observe(hero);
-    if (reduceMotion) draw(); else loop();   // one still frame if animations are off
+    if (reduceMotion) draw(0); else requestAnimationFrame(loop);
 
     /* ---------- Scroll reveal ---------- */
     const revealer = new IntersectionObserver((entries) => {
@@ -844,15 +1103,14 @@
         btn.addEventListener("pointerleave", () => { btn.style.transform = ""; });
       });
 
-      /* Hero photo and chips drift gently against the mouse for a sense of depth */
-      const photo = document.querySelector(".hero-photo"), chipsEl = document.querySelector(".chips");
+      /* Hero photo drifts gently against the mouse for a sense of depth */
+      const photo = document.querySelector(".hero-photo");
       hero.addEventListener("pointermove", e => {
         const r = hero.getBoundingClientRect();
         const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
         photo.style.transform = "translate(" + (-x * 16) + "px," + (-y * 10) + "px) scale(1.03)";
-        chipsEl.style.transform = "translate(" + (x * 22) + "px," + (y * 14) + "px)";
       });
-      hero.addEventListener("pointerleave", () => { photo.style.transform = ""; chipsEl.style.transform = ""; });
+      hero.addEventListener("pointerleave", () => { photo.style.transform = ""; });
     }
 
     /* ---------- Touch devices (iPhone and Android): tap and scroll versions of the mouse effects ---------- */
@@ -871,15 +1129,14 @@
         ["pointerup", "pointercancel", "pointerleave"].forEach(ev => card.addEventListener(ev, settle));   // pointercancel = you started scrolling
       });
 
-      /* Scrolling gives the hero photo and chips a little depth: they move slower than the page */
-      const photoT = document.querySelector(".hero-photo"), chipsT = document.querySelector(".chips");
+      /* Scrolling gives the hero photo a little depth: it moves slower than the page */
+      const photoT = document.querySelector(".hero-photo");
       let tick = false;
       addEventListener("scroll", () => {
         if (tick || !heroVisible) return; tick = true;
         requestAnimationFrame(() => {
           const y = Math.min(scrollY, 400);
           photoT.style.transform = "translateY(" + (y * .22) + "px) scale(" + (1 + y * .0004) + ")";
-          chipsT.style.transform = "translateY(" + (y * .1) + "px)";
           tick = false;
         });
       }, { passive: true });
@@ -893,6 +1150,343 @@
       hero.addEventListener("touchmove", setTouch, { passive: true });
       ["touchend", "touchcancel"].forEach(ev => hero.addEventListener(ev, () => { mouse.x = mouse.y = -999; }, { passive: true }));
     }
+
+    /* ---------- Soft ripple on every button (mouse click or finger tap) ---------- */
+    function addRipple(e) {
+      if (reduceMotion) return;
+      const el = e.currentTarget, r = el.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2;
+      const dot = document.createElement("span");
+      dot.className = "ripple";
+      dot.style.cssText = "width:" + d + "px;height:" + d + "px;left:" + (e.clientX - r.left - d / 2) + "px;top:" + (e.clientY - r.top - d / 2) + "px";
+      el.appendChild(dot); setTimeout(() => dot.remove(), 650);
+    }
+    document.querySelectorAll(".btn, .filter, .icon-btn, .topics span, .cert-tile, .socials a").forEach(b => b.addEventListener("pointerdown", addRipple));
+
+    /* ---------- Stagger: bullets and tags arrive one after another ---------- */
+    document.querySelectorAll(".reveal ul").forEach(ul => [...ul.children].forEach((li, i) => li.style.setProperty("--i", i)));
+    document.querySelectorAll(".tags").forEach(box => [...box.children].forEach((t, i) => t.style.setProperty("--j", i)));
+
+    /* ---------- Arrows on buttons slide on hover or press ---------- */
+    document.querySelectorAll(".btn").forEach(b => {
+      const last = [...b.childNodes].reverse().find(n => n.nodeType === 3 && n.textContent.trim());
+      if (!last) return;
+      const m = last.textContent.match(/^([\s\S]*?)\s*([→↗])\s*$/);
+      if (!m) return;
+      last.textContent = m[1] + " ";
+      const a = document.createElement("span"); a.className = "arr" + (m[2] === "↗" ? " up" : ""); a.textContent = m[2];
+      b.appendChild(a);
+    });
+
+    /* ---------- Scroll-linked touches: timeline and back-to-top ---------- */
+    const stackEl = document.querySelector(".stack"), toTop = document.getElementById("totop");
+    let ticking = false;
+    function onScrollFx() {
+      ticking = false;
+      if (stackEl) {                                      // timeline line fills as the experience section passes
+        const r = stackEl.getBoundingClientRect();
+        stackEl.style.setProperty("--tl", Math.max(0, Math.min(1, (innerHeight * .65 - r.top) / r.height)).toFixed(3));
+      }
+      toTop.classList.toggle("show", scrollY > 700);
+    }
+    addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(onScrollFx); } }, { passive: true });
+    addEventListener("resize", onScrollFx); onScrollFx();
+    toTop.addEventListener("click", () => scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" }));
+    document.querySelectorAll("#totop").forEach(b => b.addEventListener("pointerdown", addRipple));
+
+    /* ---------- Middle of the page: floating maths, statistics and neural networks ----------
+       Symbols and formulas drift behind the content. Move the mouse or a finger and they float away;
+       click or tap and they scatter, while the neural networks fire a signal from input to output. */
+    (function () {
+      const wrap = document.getElementById("midfx"), cv = document.getElementById("mid"), c = cv.getContext("2d");
+      const VIOLET = "167,139,250";
+      const GLYPHS = ["\u2211 x\u1d62", "\u03bc", "\u03c3\u00b2", "\u222b f(x)dx", "\u2207L", "\u2202L/\u2202w", "\u03b8", "\u03c0", "e^(i\u03c0)+1=0", "P(A|B)", "y = Wx + b",
+        "softmax(z)", "argmax", "R\u00b2 = 0.97", "p < 0.05", "N(\u03bc, \u03c3\u00b2)", "ReLU(x)", "f(x)", "\u03bb", "\u221e", "\u221an", "x\u0304", "\u0177", "\u03a3",
+        "\u03b1 = 0.01", "AUC", "F1", "H(p)", "KL(p||q)", "w \u2190 w \u2212 \u03b7\u2207L", "E[X]", "Var(X)", "\u03c1", "\u2248", "\u2260", "\u2264", "\u2208", "\u2200"];
+      let W = 0, H = 0, items = [], glyphs = [], vis = false, last = 0, ptr = { x: -999, y: -999 };
+      const bursts = [];
+      const rnd = (a, b) => a + Math.random() * (b - a);
+      const ACT = () => "rgba(" + accent + ",";
+
+      function build() {
+        items = []; glyphs = [];
+        const narrow = W < 700, gap = narrow ? 560 : 520, kinds = ["net", "bell", "scatter", "net", "bell", "scatter"];
+        for (let y = 140, i = 0; y < H - 220; y += gap, i++) {
+          const kind = kinds[i % kinds.length], w = narrow ? 150 : 210, h = narrow ? 100 : 130;
+          const left = i % 2 === 0, x = narrow ? (left ? 8 : W - w - 8) : (left ? 18 : W - w - 18);
+          const it = { kind, x, y: y + rnd(-40, 40), w, h, ph: rnd(0, 6.28), pts: null, act: null, flow: -1 };
+          if (kind === "net") { it.layers = [3, 4, 4, 2]; it.act = it.layers.map(n => new Array(n).fill(0)); }
+          if (kind === "scatter") { it.pts = Array.from({ length: 14 }, (_, k) => ({ x: k / 13, y: .2 + .6 * (k / 13) + rnd(-.18, .18), jx: rnd(0, 6.28) })); it.fit = { a: .6, b: .2, ta: .6, tb: .2 }; }
+          items.push(it);
+        }
+        const n = Math.round((W * H) / (narrow ? 70000 : 85000));
+        for (let i = 0; i < n; i++) glyphs.push({ t: GLYPHS[(Math.random() * GLYPHS.length) | 0], x: rnd(0, W), y: rnd(0, H), vx: rnd(-9, 9), vy: rnd(-9, 9), bx: 0, by: 0,
+          size: rnd(15, 27), a: rnd(.22, .42), rot: rnd(-.4, .4), vr: rnd(-.05, .05), v: Math.random() < .3 });
+        glyphs.forEach(g => { g.bx = g.vx; g.by = g.vy; });
+      }
+      function size() {
+        const dpr = Math.min(devicePixelRatio || 1, 1.25);
+        W = wrap.clientWidth; H = wrap.clientHeight; cv.width = W * dpr; cv.height = H * dpr; c.setTransform(dpr, 0, 0, dpr, 0, 0);
+        build(); if (reduceMotion) frame(0);
+      }
+
+      /* ----- the three mini diagrams ----- */
+      function drawNet(it, t) {
+        const cols = it.layers.length, pos = it.layers.map((n, li) => Array.from({ length: n }, (_, k) => [it.x + li * (it.w / (cols - 1)), it.y + (k + .5) * (it.h / n) + Math.sin(t * .8 + li + k) * 2]));
+        for (let li = 0; li < cols - 1; li++) for (const a of pos[li]) for (const b of pos[li + 1]) {
+          const s = Math.max(it.act[li][pos[li].indexOf(a)], it.act[li + 1][pos[li + 1].indexOf(b)]);
+          c.strokeStyle = ACT() + (.16 + s * .5) + ")"; c.lineWidth = 1; c.beginPath(); c.moveTo(a[0], a[1]); c.lineTo(b[0], b[1]); c.stroke();
+        }
+        pos.forEach((layer, li) => layer.forEach((p, k) => {
+          const near = Math.hypot(ptr.x - p[0], ptr.y - p[1]), hover = near < 90 ? 1 - near / 90 : 0, s = Math.max(it.act[li][k], hover);
+          c.fillStyle = ACT() + (.45 + s * .55) + ")"; c.beginPath(); c.arc(p[0], p[1], 4.5 + s * 3.5, 0, 7); c.fill();
+          if (s > .1) { c.strokeStyle = ACT() + s * .5 + ")"; c.lineWidth = 1.5; c.beginPath(); c.arc(p[0], p[1], 9 + s * 7, 0, 7); c.stroke(); }
+        }));
+        c.fillStyle = "rgba(" + ink + ",.5)"; c.font = "600 11px 'JetBrains Mono', monospace"; c.fillText("input", it.x - 4, it.y + it.h + 16); c.fillText("output", it.x + it.w - 34, it.y + it.h + 16);
+      }
+      function drawBell(it, t) {
+        const sig = 1 + Math.sin(t * .6 + it.ph) * .35, near = ptr.x > it.x - 20 && ptr.x < it.x + it.w + 20 && ptr.y > it.y - 30 && ptr.y < it.y + it.h + 30;
+        const f = x => Math.exp(-x * x / (2 * sig * sig)) / (sig * 2.5066), mid = it.x + it.w / 2, base = it.y + it.h;
+        c.beginPath(); c.moveTo(it.x, base);
+        for (let i = 0; i <= 60; i++) { const x = -3 + i * .1, px = mid + x * (it.w / 6.4), py = base - f(x) * it.h * 1.9; c.lineTo(px, py); }
+        c.lineTo(it.x + it.w, base); c.closePath(); c.fillStyle = "rgba(" + VIOLET + "," + (near ? .22 : .12) + ")"; c.fill();
+        c.beginPath(); for (let i = 0; i <= 60; i++) { const x = -3 + i * .1, px = mid + x * (it.w / 6.4), py = base - f(x) * it.h * 1.9; i ? c.lineTo(px, py) : c.moveTo(px, py); }
+        c.strokeStyle = "rgba(" + VIOLET + ",.85)"; c.lineWidth = 2; c.stroke();
+        c.strokeStyle = "rgba(" + VIOLET + ",.35)"; c.setLineDash([4, 4]); c.lineWidth = 1;
+        [-1, 1].forEach(m => { const px = mid + m * sig * (it.w / 6.4); c.beginPath(); c.moveTo(px, base); c.lineTo(px, base - f(m * sig) * it.h * 1.9); c.stroke(); });
+        c.setLineDash([]); c.strokeStyle = "rgba(" + ink + ",.3)"; c.beginPath(); c.moveTo(it.x, base); c.lineTo(it.x + it.w, base); c.stroke();
+        c.fillStyle = "rgba(" + ink + ",.6)"; c.font = "600 11px 'JetBrains Mono', monospace"; c.fillText("\u03bc \u00b1 \u03c3 = " + sig.toFixed(2), it.x + 4, it.y + it.h + 16);
+        if (near) { c.strokeStyle = "rgba(" + VIOLET + ",.7)"; c.beginPath(); c.moveTo(ptr.x, base); c.lineTo(ptr.x, base - f((ptr.x - mid) / (it.w / 6.4)) * it.h * 1.9); c.stroke(); }
+      }
+      function drawScatter(it, t) {
+        const f = it.fit; f.a += (f.ta - f.a) * .05; f.b += (f.tb - f.b) * .05;
+        c.strokeStyle = "rgba(" + ink + ",.28)"; c.lineWidth = 1; c.beginPath(); c.moveTo(it.x, it.y); c.lineTo(it.x, it.y + it.h); c.lineTo(it.x + it.w, it.y + it.h); c.stroke();
+        for (const p of it.pts) {
+          const px = it.x + p.x * it.w + Math.sin(t * .7 + p.jx) * 2, py = it.y + it.h - p.y * it.h + Math.cos(t * .6 + p.jx) * 2, d = Math.hypot(ptr.x - px, ptr.y - py), s = d < 80 ? 1 - d / 80 : 0;
+          c.fillStyle = ACT() + (.55 + s * .45) + ")"; c.beginPath(); c.arc(px, py, 3.5 + s * 3, 0, 7); c.fill();
+        }
+        c.strokeStyle = "rgba(" + VIOLET + ",.85)"; c.lineWidth = 2; c.beginPath();
+        c.moveTo(it.x, it.y + it.h - f.b * it.h); c.lineTo(it.x + it.w, it.y + it.h - (f.a + f.b) * it.h); c.stroke();
+        c.fillStyle = "rgba(" + ink + ",.6)"; c.font = "600 11px 'JetBrains Mono', monospace"; c.fillText("\u0177 = " + f.a.toFixed(2) + "x + " + f.b.toFixed(2), it.x + 4, it.y + it.h + 16);
+      }
+
+      function fire(it) { if (it.kind === "net") it.flow = 0; if (it.kind === "scatter") { it.pts.forEach(p => { p.y = Math.max(.05, Math.min(.95, .2 + .6 * p.x * rnd(.5, 1.4) + rnd(-.2, .2))); }); it.fit.ta = rnd(.2, .8); it.fit.tb = rnd(.1, .35); } }
+
+      function frame(tms) {
+        const t = tms / 1000, dt = Math.min(t - last, .05); last = t;
+        const r = wrap.getBoundingClientRect(), top = -r.top - 160, bot = -r.top + innerHeight + 160;
+        if (!reduceMotion && !vis) return;                 // off screen: skip drawing (the loop keeps ticking cheaply)
+        c.clearRect(0, 0, W, H);
+        // floating symbols and formulas
+        for (const g of glyphs) {
+          if (!reduceMotion) {
+            const dx = g.x - ptr.x, dy = g.y - ptr.y, d = Math.hypot(dx, dy);
+            if (d < 170 && d > 1) { const k = (1 - d / 170) * 420 * dt; g.vx += dx / d * k; g.vy += dy / d * k; }
+            for (const b of bursts) { const bx = g.x - b.x, by = g.y - b.y, bd = Math.hypot(bx, by); if (bd < 360 && bd > 1 && t - b.t < .05 + dt) { const k = (1 - bd / 360) * 520; g.vx += bx / bd * k; g.vy += by / bd * k; g.vr += (Math.random() - .5) * 3; } }
+            g.vx += (g.bx - g.vx) * 1.1 * dt; g.vy += (g.by - g.vy) * 1.1 * dt; g.vr += (0 - g.vr) * .8 * dt;
+            g.x += g.vx * dt; g.y += g.vy * dt; g.rot += g.vr * dt;
+            if (g.x < -80) g.x = W + 40; if (g.x > W + 80) g.x = -40; if (g.y < -40) g.y = H + 20; if (g.y > H + 40) g.y = -20;
+          }
+          if (g.y < top || g.y > bot) continue;
+          const d2 = Math.hypot(g.x - ptr.x, g.y - ptr.y), near = d2 < 170 ? 1 - d2 / 170 : 0;
+          c.save(); c.translate(g.x, g.y); c.rotate(g.rot);
+          c.font = "600 " + g.size + "px 'JetBrains Mono', monospace"; c.fillStyle = g.v ? "rgba(" + VIOLET + "," + Math.min(.9, g.a + near * .5) + ")" : ACT() + Math.min(.9, g.a + near * .5) + ")";
+          c.fillText(g.t, 0, 0); c.restore();
+        }
+        while (bursts.length && t - bursts[0].t > .1) bursts.shift();
+        // diagrams
+        for (const it of items) {
+          if (it.y + it.h < top || it.y > bot) continue;
+          if (it.kind === "net") {
+            if (!reduceMotion) {
+              if (it.flow < 0 && Math.random() < dt / 4) it.flow = 0;                       // fires by itself every few seconds
+              if (it.flow >= 0) { it.flow += dt * 2.6; const li = Math.floor(it.flow); if (li < it.layers.length) it.act[li].fill(1); else it.flow = -1; }
+              it.act.forEach(l => { for (let k = 0; k < l.length; k++) l[k] = Math.max(0, l[k] - dt * 1.4); });
+            }
+            drawNet(it, t);
+          } else if (it.kind === "bell") drawBell(it, t); else drawScatter(it, t);
+        }
+      }
+      function loop(tms) { frame(tms); requestAnimationFrame(loop); }
+
+      function rel(x, y) { const r = wrap.getBoundingClientRect(); return [x - r.left, y - r.top]; }
+      wrap.addEventListener("mousemove", e => { const p = rel(e.clientX, e.clientY); ptr.x = p[0]; ptr.y = p[1]; });
+      wrap.addEventListener("mouseleave", () => { ptr.x = ptr.y = -999; });
+      const touch = e => { const t = e.touches[0], p = rel(t.clientX, t.clientY); ptr.x = p[0]; ptr.y = p[1]; };
+      wrap.addEventListener("touchstart", touch, { passive: true }); wrap.addEventListener("touchmove", touch, { passive: true });
+      ["touchend", "touchcancel"].forEach(ev => wrap.addEventListener(ev, () => setTimeout(() => { ptr.x = ptr.y = -999; }, 500), { passive: true }));
+      wrap.addEventListener("click", e => {                       // click or tap: scatter the symbols, fire the networks
+        if (reduceMotion || e.target.closest("a, button, input, textarea, label")) return;
+        const p = rel(e.clientX, e.clientY); bursts.push({ x: p[0], y: p[1], t: performance.now() / 1000 });
+        items.forEach(it => { if (Math.abs(it.y - p[1]) < 520) fire(it); });
+      });
+      new IntersectionObserver(([e]) => { vis = e.isIntersecting; }).observe(wrap);
+      new ResizeObserver(size).observe(wrap);
+      size(); if (!reduceMotion) requestAnimationFrame(loop);
+    })();
+
+    /* ---------- Projects: a data pipeline. Packets flow through INGEST > CLEAN > FEATURES > TRAIN > DEPLOY.
+       Mouse or finger nearby speeds them up and lights the lane. Click or tap to release a burst of packets. ---------- */
+    (function () {
+      const sec = document.getElementById("projects"), cv = document.getElementById("flow"), c = cv.getContext("2d");
+      const STAGES = ["INGEST", "CLEAN", "FEATURES", "TRAIN", "DEPLOY"], VIOLET = "167,139,250";
+      let W = 0, H = 0, lanes = [], packets = [], rings = [], vis = false, last = 0, ptr = { x: -999, y: -999 };
+      const rnd = (a, b) => a + Math.random() * (b - a);
+      const laneY = (l, x, t) => l.y + Math.sin(x * l.f + l.ph + t * .35) * l.amp;
+      function size() {
+        const dpr = Math.min(devicePixelRatio || 1, 1.25);
+        W = sec.clientWidth; H = sec.clientHeight; cv.width = W * dpr; cv.height = H * dpr; c.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const n = W < 700 ? 5 : 7; lanes = []; packets = [];
+        for (let i = 0; i < n; i++) {
+          const l = { y: 100 + (i + .5) * (H - 200) / n, amp: rnd(14, 36), f: rnd(.003, .006), ph: rnd(0, 6.28), fl: STAGES.map(() => 0) };
+          lanes.push(l);
+          for (let k = 0; k < (W < 700 ? 3 : 4); k++) packets.push({ l: i, x: rnd(0, W), v: rnd(55, 120), extra: 0, r: rnd(3.2, 5), vio: Math.random() < .35, burst: false });
+        }
+        if (reduceMotion) frame(0);
+      }
+      const stageX = i => W * (i + .5) / STAGES.length;
+      function frame(tms) {
+        const t = tms / 1000, dt = Math.min(t - last, .05); last = t;
+        if (!reduceMotion && !vis) return;
+        c.clearRect(0, 0, W, H);
+        // stage guides and labels
+        c.font = "600 11px 'JetBrains Mono', monospace"; c.textAlign = "center";
+        STAGES.forEach((s, i) => {
+          const x = stageX(i);
+          c.strokeStyle = "rgba(" + ink + ",.07)"; c.setLineDash([3, 7]); c.beginPath(); c.moveTo(x, 62); c.lineTo(x, H - 50); c.stroke(); c.setLineDash([]);
+          c.fillStyle = "rgba(" + ink + ",.5)"; c.fillText(s, x, 46); c.fillText(s, x, H - 28);
+        });
+        c.textAlign = "left";
+        // lanes
+        lanes.forEach(l => {
+          const near = ptr.x > -500 ? Math.max(0, 1 - Math.abs(ptr.y - laneY(l, ptr.x, t)) / 80) : 0;
+          c.strokeStyle = "rgba(" + accent + "," + (.22 + near * .45) + ")"; c.lineWidth = 1.4 + near; c.beginPath();
+          for (let x = 0; x <= W; x += 14) { const y = laneY(l, x, t); x ? c.lineTo(x, y) : c.moveTo(x, y); }
+          c.stroke();
+          STAGES.forEach((s, i) => {                                   // stage gates light up when a packet passes
+            l.fl[i] = Math.max(0, l.fl[i] - dt * 1.6); const x = stageX(i), y = laneY(l, x, t);
+            c.fillStyle = "rgba(" + accent + "," + (.35 + l.fl[i] * .65) + ")"; c.beginPath(); c.arc(x, y, 3.5 + l.fl[i] * 4, 0, 7); c.fill();
+            if (l.fl[i] > .05) { c.strokeStyle = "rgba(" + accent + "," + l.fl[i] * .6 + ")"; c.lineWidth = 1.5; c.beginPath(); c.arc(x, y, 8 + l.fl[i] * 10, 0, 7); c.stroke(); }
+          });
+        });
+        // packets
+        for (let i = packets.length - 1; i >= 0; i--) {
+          const p = packets[i], l = lanes[p.l], y0 = laneY(l, p.x, t);
+          const near = ptr.x > -500 ? Math.max(0, 1 - Math.hypot(ptr.x - p.x, ptr.y - y0) / 140) : 0;
+          if (!reduceMotion) {
+            const px = p.x; p.extra *= Math.exp(-1.4 * dt);
+            p.x += (p.v * (1 + near * 2.5) + p.extra) * dt;
+            STAGES.forEach((s, k) => { const sx = stageX(k); if (px < sx && p.x >= sx) l.fl[k] = 1; });
+            if (p.x > W + 24) { if (p.burst) { packets.splice(i, 1); continue; } p.x = -24; p.v = rnd(55, 120); }
+          }
+          const col = p.vio ? VIOLET : accent, y = laneY(l, p.x, t);
+          for (let k = 5; k >= 1; k--) { c.fillStyle = "rgba(" + col + "," + (.5 - k * .08) * (1 + near) + ")"; c.beginPath(); c.arc(p.x - k * 7, laneY(l, p.x - k * 7, t), p.r * (1 - k * .12), 0, 7); c.fill(); }
+          c.shadowColor = "rgba(" + col + ",.9)"; c.shadowBlur = 10 + near * 10; c.fillStyle = "rgba(" + col + ",1)";
+          c.beginPath(); c.arc(p.x, y, p.r + near * 2, 0, 7); c.fill(); c.shadowBlur = 0;
+        }
+        // click rings
+        rings = rings.filter(r => t - r.t < 1.2);
+        for (const r of rings) { const k = (t - r.t) / 1.2; c.strokeStyle = "rgba(" + accent + "," + (1 - k) * .5 + ")"; c.lineWidth = 1.5; c.beginPath(); c.arc(r.x, r.y, k * 220, 0, 7); c.stroke(); }
+      }
+      function loop(tms) { frame(tms); requestAnimationFrame(loop); }
+      const rel = (x, y) => { const r = sec.getBoundingClientRect(); return [x - r.left, y - r.top]; };
+      sec.addEventListener("mousemove", e => { const p = rel(e.clientX, e.clientY); ptr.x = p[0]; ptr.y = p[1]; });
+      sec.addEventListener("mouseleave", () => { ptr.x = ptr.y = -999; });
+      const touch = e => { const t = e.touches[0], p = rel(t.clientX, t.clientY); ptr.x = p[0]; ptr.y = p[1]; };
+      sec.addEventListener("touchstart", touch, { passive: true }); sec.addEventListener("touchmove", touch, { passive: true });
+      ["touchend", "touchcancel"].forEach(ev => sec.addEventListener(ev, () => setTimeout(() => { ptr.x = ptr.y = -999; }, 500), { passive: true }));
+      sec.addEventListener("click", e => {                         // click or tap: release a burst of packets from that spot
+        if (reduceMotion || e.target.closest("a, button")) return;
+        const p = rel(e.clientX, e.clientY), t = performance.now() / 1000; rings.push({ x: p[0], y: p[1], t });
+        const order = lanes.map((l, i) => [i, Math.abs(laneY(l, p[0], t) - p[1])]).sort((a, b) => a[1] - b[1]).slice(0, 3);
+        for (let k = 0; k < 14; k++) packets.push({ l: order[k % order.length][0], x: p[0], v: rnd(70, 110), extra: rnd(260, 520), r: 3.2, vio: Math.random() < .4, burst: true });
+      });
+      new IntersectionObserver(([e]) => { vis = e.isIntersecting; }).observe(sec);
+      new ResizeObserver(size).observe(sec);
+      size(); if (!reduceMotion) requestAnimationFrame(loop);
+    })();
+
+    /* ---------- Bottom: a rotating globe rising from the horizon.
+       Drag it (mouse or finger) to spin, move the mouse across to steer it, click or tap to send a wave over its surface. ---------- */
+    (function () {
+      const sec = document.getElementById("contact"), cv = document.getElementById("globe"), c = cv.getContext("2d");
+      let W = 0, H = 0, R = 0, cx = 0, cy = 0, pts = [], lit = [], links = [], waves = [], vis = false, last = 0;
+      let rot = 0, vel = .14, steer = 0, tilt = .5, ptr = { x: -999, y: -999 }, orbit = 0;
+      function size() {
+        const dpr = Math.min(devicePixelRatio || 1, 1.25);
+        W = sec.clientWidth; H = sec.clientHeight; cv.width = W * dpr; cv.height = H * dpr; c.setTransform(dpr, 0, 0, dpr, 0, 0);
+        R = Math.min(W * .56, 480); const cap = W < 860 ? 230 : 250; cx = W / 2; cy = H - cap + R;
+        const n = W < 700 ? 190 : 300; pts = []; lit = new Array(n).fill(0);
+        for (let i = 0; i < n; i++) { const y = 1 - (i / (n - 1)) * 2, r = Math.sqrt(1 - y * y), th = i * 2.399963; pts.push([Math.cos(th) * r, y, Math.sin(th) * r]); }
+        links = [];
+        for (let i = 0; i < n; i++) { let cnt = 0; for (let j = i + 1; j < n && cnt < 3; j++) { const d = Math.hypot(pts[i][0] - pts[j][0], pts[i][1] - pts[j][1], pts[i][2] - pts[j][2]); if (d < (W < 700 ? .5 : .4)) { links.push([i, j]); cnt++; } } }
+        if (reduceMotion) frame(0);
+      }
+      function proj(p) {
+        const ca = Math.cos(rot), sa = Math.sin(rot), x = p[0] * ca + p[2] * sa, z = -p[0] * sa + p[2] * ca;
+        const ct = Math.cos(tilt), st = Math.sin(tilt), y = p[1] * ct - z * st, z2 = p[1] * st + z * ct;
+        return [cx + x * R, cy - y * R, z2];
+      }
+      function frame(tms) {
+        const t = tms / 1000, dt = Math.min(t - last, .05); last = t;
+        if (!reduceMotion && !vis) return;
+        c.clearRect(0, 0, W, H);
+        if (!reduceMotion) { rot += (vel + steer) * dt; steer *= Math.exp(-1.2 * dt); orbit += dt * .6; }
+        // glow and rim
+        const g = c.createRadialGradient(cx, cy, R * .85, cx, cy, R * 1.12); g.addColorStop(0, "rgba(" + accent + ",.0)"); g.addColorStop(.7, "rgba(" + accent + ",.14)"); g.addColorStop(1, "rgba(" + accent + ",0)");
+        c.fillStyle = g; c.beginPath(); c.arc(cx, cy, R * 1.12, 0, 7); c.fill();
+        c.strokeStyle = "rgba(" + accent + ",.55)"; c.lineWidth = 1.6; c.shadowColor = "rgba(" + accent + ",.8)"; c.shadowBlur = 18; c.beginPath(); c.arc(cx, cy, R, 0, 7); c.stroke(); c.shadowBlur = 0;
+        waves = waves.filter(w => t - w.t < 1.8);
+        const P = pts.map(proj);
+        for (let i = 0; i < P.length; i++) {
+          lit[i] = Math.max(0, lit[i] - dt * 1.1);
+          for (const w of waves) { const d = Math.hypot(P[i][0] - w.x, P[i][1] - w.y); if (Math.abs(d - (t - w.t) * 360) < 38) lit[i] = 1; }
+        }
+        // links, then points (back hemisphere faint, front bright)
+        for (const [i, j] of links) {
+          const a = P[i], b = P[j]; if (a[2] < -.05 || b[2] < -.05 || (a[1] > H + 10 && b[1] > H + 10)) continue;
+          const s = Math.max(lit[i], lit[j]); c.strokeStyle = "rgba(" + accent + "," + (.1 + .12 * Math.min(a[2], b[2]) + s * .6) + ")"; c.lineWidth = 1; c.beginPath(); c.moveTo(a[0], a[1]); c.lineTo(b[0], b[1]); c.stroke();
+        }
+        for (let i = 0; i < P.length; i++) {
+          const p = P[i]; if (p[1] > H + 10 || p[1] < -10) continue;
+          const front = p[2] > 0, s = lit[i], d = ptr.x > -500 ? Math.max(0, 1 - Math.hypot(ptr.x - p[0], ptr.y - p[1]) / 90) : 0, k = Math.max(s, d * (front ? 1 : 0));
+          c.fillStyle = "rgba(" + accent + "," + ((front ? .35 + p[2] * .5 : .1) + k * .6) + ")";
+          c.beginPath(); c.arc(p[0], p[1], (front ? 1.7 + p[2] * 1.2 : 1.1) + k * 3, 0, 7); c.fill();
+        }
+        // orbit ring with satellites
+        c.save(); c.translate(cx, cy); c.rotate(-.18); c.strokeStyle = "rgba(167,139,250,.35)"; c.setLineDash([5, 7]); c.lineWidth = 1;
+        c.beginPath(); c.ellipse(0, 0, R * 1.22, R * .3, 0, 0, 7); c.stroke(); c.setLineDash([]);
+        for (let k = 0; k < 3; k++) { const a = orbit + k * 2.09; c.fillStyle = "rgba(167,139,250,.95)"; c.shadowColor = "rgba(167,139,250,.9)"; c.shadowBlur = 12; c.beginPath(); c.arc(Math.cos(a) * R * 1.22, Math.sin(a) * R * .3, 4, 0, 7); c.fill(); }
+        c.shadowBlur = 0; c.restore();
+        // click waves
+        for (const w of waves) { const k = (t - w.t) / 1.8; c.strokeStyle = "rgba(" + accent + "," + (1 - k) * .45 + ")"; c.lineWidth = 1.5; c.beginPath(); c.arc(w.x, w.y, k * 650, 0, 7); c.stroke(); }
+      }
+      function loop(tms) { frame(tms); requestAnimationFrame(loop); }
+      const rel = (x, y) => { const r = sec.getBoundingClientRect(); return [x - r.left, y - r.top]; };
+      let drag = false, lastX = 0, moved = 0;
+      const skip = e => e.target.closest("form, a, button, input, textarea, label");
+      sec.addEventListener("mousedown", e => { if (skip(e)) return; drag = true; lastX = e.clientX; moved = 0; });
+      addEventListener("mouseup", () => { drag = false; });
+      sec.addEventListener("mousemove", e => {
+        const p = rel(e.clientX, e.clientY); ptr.x = p[0]; ptr.y = p[1];
+        if (drag) { const dx = e.clientX - lastX; lastX = e.clientX; moved += Math.abs(dx); rot += dx * .008; steer = dx * .25; }
+        else steer += ((p[0] / W - .5) * .5 - steer) * .02;          // moving across steers the spin
+      });
+      sec.addEventListener("mouseleave", () => { ptr.x = ptr.y = -999; drag = false; });
+      let tx = null;
+      sec.addEventListener("touchstart", e => { const t = e.touches[0], p = rel(t.clientX, t.clientY); ptr.x = p[0]; ptr.y = p[1]; tx = t.clientX; moved = 0; }, { passive: true });
+      sec.addEventListener("touchmove", e => {
+        const t = e.touches[0], p = rel(t.clientX, t.clientY); ptr.x = p[0]; ptr.y = p[1];
+        if (tx !== null && !e.target.closest("form")) { const dx = t.clientX - tx; tx = t.clientX; moved += Math.abs(dx); rot += dx * .008; steer = dx * .25; }
+      }, { passive: true });
+      ["touchend", "touchcancel"].forEach(ev => sec.addEventListener(ev, () => { tx = null; setTimeout(() => { ptr.x = ptr.y = -999; }, 500); }, { passive: true }));
+      sec.addEventListener("click", e => {                         // click or tap: a wave of light over the globe
+        if (reduceMotion || skip(e) || moved > 12) return;
+        const p = rel(e.clientX, e.clientY); waves.push({ x: p[0], y: p[1], t: performance.now() / 1000 });
+      });
+      new IntersectionObserver(([e]) => { vis = e.isIntersecting; }).observe(sec);
+      new ResizeObserver(size).observe(sec);
+      size(); if (!reduceMotion) requestAnimationFrame(loop);
+    })();
   </script>
 </body>
 </html>
