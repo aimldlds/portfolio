@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Basic page setup -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mohsin Chaudhary | Data Scientist</title>
+  <meta name="description" content="Mohsin Chaudhary, Data Scientist in Bath, UK. Applied machine learning, LLMs and data engineering on Azure.">
+
+  <!-- Social share preview (LinkedIn, WhatsApp etc.) -->
+  <meta property="og:title" content="Mohsin Chaudhary | Data Scientist">
+  <meta property="og:description" content="Applied ML, LLMs and data engineering for public services.">
+  <meta property="og:url" content="https://mohsinchaudhary.com">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://mohsinchaudhary.com/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://mohsinchaudhary.com/">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232f7d6d'/%3E%3Ctext x='32' y='44' font-size='34' font-family='Georgia,serif' font-weight='bold' text-anchor='middle' fill='white'%3EM%3C/text%3E%3C/svg%3E">
+
+  <!-- Fonts: Inter for body text, Fraunces for headings -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ---------- Colour tokens (light mode) ---------- */
+    :root {
+      --bg: #fbfaf7;
+      --surface: #ffffff;
+      --text: #1d2321;
+      --muted: #5b6662;
+      --line: #e4e2dc;
+      --accent: #2f7d6d;
+      --accent-soft: #e3f0ec;
+      --on-accent: #ffffff;
+      --nav-h: 58px;
+    }
+    /* ---------- Dark mode (follows the visitor's device setting) ---------- */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #121614;
+        --surface: #1a201d;
+        --text: #e8ece9;
+        --muted: #9aa7a2;
+        --line: #2a322e;
+        --accent: #6cc3ad;
+        --accent-soft: #1f2e29;
+        --on-accent: #0d1512;
+      }
+    }
+
+    /* ---------- Base layout ---------- */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-padding-top: calc(var(--nav-h) + 8px); }
+    @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+    .skip {
+      position: absolute; left: 12px; top: -60px; z-index: 20;
+      background: var(--accent); color: var(--on-accent); padding: 8px 14px; border-radius: 8px;
+    }
+    .skip:focus { top: 8px; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", system-ui, sans-serif;
+      line-height: 1.65;
+      font-size: 17px;
+    }
+    .wrap { max-width: 860px; margin: 0 auto; padding: 0 20px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; line-height: 1.2; }
+
+    /* ---------- Top navigation ---------- */
+    nav {
+      position: sticky; top: 0; z-index: 10;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+    nav .wrap { display: flex; justify-content: space-between; align-items: center; height: var(--nav-h); gap: 16px; }
+    nav .logo { font-family: "Fraunces", serif; font-weight: 600; color: var(--text); white-space: nowrap; }
+    nav ul { list-style: none; display: flex; gap: 20px; font-size: 15px; }
+    nav ul a { color: var(--muted); }
+    /* On small phones the links shrink and scroll sideways instead of disappearing */
+    @media (max-width: 560px) {
+      nav .logo { display: none; }
+      nav ul { gap: 16px; font-size: 14px; overflow-x: auto; white-space: nowrap; width: 100%; justify-content: space-between; }
+    }
+
+    /* ---------- Hero / intro ---------- */
+    header { padding: 80px 0 56px; }
+    .eyebrow { color: var(--accent); font-weight: 600; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; }
+    header h1 { font-size: clamp(36px, 7vw, 56px); margin: 12px 0 18px; }
+    header p { color: var(--muted); max-width: 620px; font-size: 18px; }
+    .buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .btn {
+      display: inline-block; padding: 11px 20px; border-radius: 8px;
+      font-weight: 500; font-size: 15px; border: 1px solid var(--line); color: var(--text);
+    }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+    .btn:hover { text-decoration: none; opacity: .9; }
+
+    /* ---------- Sections ---------- */
+    section { padding: 48px 0; border-top: 1px solid var(--line); }
+    section h2 { font-size: 28px; margin-bottom: 24px; }
+
+    /* Cards used for projects and experience */
+    .card {
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: 12px; padding: 22px 24px; margin-bottom: 16px;
+    }
+    .card h3 { font-size: 20px; margin-bottom: 4px; }
+    .meta { color: var(--muted); font-size: 14px; margin-bottom: 10px; }
+    .card p { margin-bottom: 10px; }
+    .card ul { padding-left: 20px; margin-bottom: 10px; }
+    .card li { margin-bottom: 4px; }
+
+    /* Small rounded labels for tech stack */
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .tag {
+      background: var(--accent-soft); color: var(--accent);
+      font-size: 13px; padding: 3px 10px; border-radius: 999px;
+    }
+    @media (prefers-color-scheme: light) { .tag { color: #24645a; } }
+
+    .caveat { color: var(--muted); font-size: 14px; }
+    .mt { margin-top: 12px; }
+
+    /* Two-column grid that collapses on phones */
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+
+    /* Highlighted number (e.g. evaluation result) */
+    .stat { font-family: "Fraunces", serif; font-size: 22px; color: var(--accent); }
+
+    footer { padding: 40px 0 60px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
+  </style>
+</head>
+
+<body id="top">
+
+  <a class="skip" href="#about">Skip to content</a>
+
+  <!-- ===== Navigation bar ===== -->
+  <nav>
+    <div class="wrap">
+      <a class="logo" href="#top">Mohsin Chaudhary</a>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#work">Experience</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ===== Intro ===== -->
+  <header class="wrap">
+    <p class="eyebrow">Data Scientist · Bath, UK</p>
+    <h1>Hi, I'm Mohsin.</h1>
+    <p>I build machine learning and LLM tools that help public services make better decisions. Right now that means risk and forecasting work for adult social care, housing and children's services at Somerset Council.</p>
+    <div class="buttons">
+      <a class="btn primary" href="mailto:ms.mohsinchaudhary@gmail.com">Email me</a>
+      <a class="btn" href="https://www.linkedin.com/in/mohsin37" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn" href="https://github.com/aimldlds" target="_blank" rel="noopener">GitHub</a>
+      <!-- TODO: add cv.pdf to this folder, then uncomment -->
+      <!-- <a class="btn" href="cv.pdf" download>Download CV</a> -->
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- ===== About ===== -->
+    <section id="about">
+      <h2>About</h2>
+      <p>I moved from India to England in 2023 for my Master's at Sheffield Hallam, did a year in industry at Wessex Water, and joined Somerset Council as a Data Scientist in July 2026.</p>
+      <p class="mt">Most of my work sits where machine learning meets messy, sensitive real-world data. I care about models people can actually trust: explainable outputs, clear data lineage, and pipelines that keep running after the demo.</p>
+    </section>
+
+    <!-- ===== Experience ===== -->
+    <section id="work">
+      <h2>Experience</h2>
+
+      <div class="card">
+        <h3>Data Scientist, Somerset Council</h3>
+        <p class="meta">July 2026 – present · Strategy, Performance and Communication</p>
+        <ul>
+          <li>Leading a risk prioritisation tool for Adult Social Care: waiting list ranking, deterioration detection and demand forecasting.</li>
+          <li>Using Azure OpenAI inside a governed environment to pull structured indicators from free-text case notes, with a focus on prompt design and validation so results are consistent and explainable to caseworkers.</li>
+          <li>Data scientist on placement forecasting for Children's Services to support medium-term financial planning.</li>
+          <li>Building end-to-end ML pipelines with CI/CD, plus model governance and data lineage.</li>
+        </ul>
+        <div class="tags">
+          <span class="tag">Python</span><span class="tag">SQL</span><span class="tag">Azure ML</span>
+          <span class="tag">Microsoft Fabric</span><span class="tag">Azure OpenAI</span><span class="tag">MLOps</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Data Specialist (industry placement), Wessex Water</h3>
+        <p class="meta">One-year placement · part of MSc</p>
+        <ul>
+          <li>Leakage detection using network flow and pressure data.</li>
+          <li>River water quality analysis.</li>
+          <li>Data pipelines on Azure.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== Projects ===== -->
+    <section id="projects">
+      <h2>Projects</h2>
+
+      <div class="card">
+        <h3>Multimodal knowledge-graph RAG over scientific papers</h3>
+        <p class="meta">Independent project · June 2026</p>
+        <p>A retrieval-augmented generation pipeline that reads scientific paper images, builds a knowledge graph from them, and answers questions with evidence. Built against a timed challenge deadline.</p>
+        <ul>
+          <li>Tesseract OCR ingestion and spaCy entity extraction</li>
+          <li>Knowledge graph of about 11,800 nodes and 17,700 edges (NetworkX)</li>
+          <li>Text and image embeddings with MiniLM and CLIP</li>
+        </ul>
+        <p><span class="stat">0.97 vs 0.53</span> mean evidence recall, graph-enhanced vs baseline, on a 10-question evaluation.</p>
+        <p class="caveat">Small evaluation set, so treat it as a directional result rather than a benchmark.</p>
+        <a href="https://github.com/aimldlds/PUBLAYER-RAG" target="_blank" rel="noopener">View on GitHub →</a>
+      </div>
+
+      <div class="card">
+        <h3>Medical Recommendation System</h3>
+        <p class="meta">MSc dissertation</p>
+        <p>A web app that takes reported symptoms and health data and suggests likely conditions and personalised recommendations. It mixes machine learning with rule-based logic, and I built it end to end, from model to interface to cloud deployment on Heroku.</p>
+        <a href="https://github.com/aimldlds/MedicalRecommendationSystem" target="_blank" rel="noopener">View on GitHub →</a>
+      </div>
+    </section>
+
+    <!-- ===== Education and certifications ===== -->
+    <section id="education">
+      <h2>Education &amp; certifications</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Education</h3>
+          <p>MSc, Sheffield Hallam University</p>
+          <p class="meta">Includes a year in industry at Wessex Water</p>
+          <p>B.Tech Computer Science, Amity University, Noida</p>
+        </div>
+        <div class="card">
+          <h3>Microsoft certifications</h3>
+          <ul>
+            <li>DP-100 Azure Data Scientist</li>
+            <li>AI-102 Azure AI Engineer</li>
+            <li>DP-600 Fabric Analytics Engineer</li>
+            <li>DP-700 Fabric Data Engineer</li>
+            <li>PL-300 Power BI Data Analyst</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Contact ===== -->
+    <section id="contact">
+      <h2>Get in touch</h2>
+      <p>Happy to chat about data science roles, research, or projects in public services and health.</p>
+      <div class="buttons">
+        <a class="btn primary" href="mailto:ms.mohsinchaudhary@gmail.com">ms.mohsinchaudhary@gmail.com</a>
+        <a class="btn" href="https://www.linkedin.com/in/mohsin37" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="https://github.com/aimldlds" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== Footer (year updates automatically) ===== -->
+  <footer>
+    <div class="wrap">© <span id="year"></span> Mohsin Chaudhary · mohsinchaudhary.com</div>
+  </footer>
+
+  <script>
+    // Insert the current year into the footer
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
