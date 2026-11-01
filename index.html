@@ -557,6 +557,30 @@
       .contact-lede { font-size: 14px; }
       .contact-points li { font-size: 14px; }
     }
+
+    /* Contact, compact on phones: short text, small chips, name and email side by side */
+    @media (max-width: 860px) {
+      section.contact { padding-top: 44px; padding-bottom: 210px; }
+      .contact-grid { gap: 18px; }
+      .contact h2 { margin-bottom: 8px; }
+      .contact-lede { font-size: 13.5px; margin-bottom: 10px; }
+      .contact-points { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-bottom: 12px; }
+      .contact-points li { font-size: 12.5px; }
+      .contact .cta { gap: 8px; }
+      .contact .cta .btn { padding: 8px 12px; font-size: 12.5px; }
+      .form-card { padding: 16px; border-radius: 16px; }
+      .form-card::after { border-radius: 15px; }
+      .form-label { margin-bottom: 6px; font-size: 13px; }
+      .topics { gap: 6px; margin-bottom: 12px; }
+      .topics span { padding: 6px 11px; font-size: 12.5px; }
+      .field-row { grid-template-columns: 1fr 1fr !important; gap: 8px; }
+      .field { margin-bottom: 10px; }
+      .field span { margin-bottom: 4px; font-size: 12px; }
+      .field input, .field textarea { padding: 9px 11px; }
+      .field textarea { min-height: 0; height: 84px; }
+      .send { padding: 11px; font-size: 15px; }
+      .form-note { margin-top: 8px; }
+    }
   </style>
 </head>
 
@@ -569,7 +593,7 @@
     <div class="wrap">
       <a class="logo" href="#top">Mohsin<span>.</span></a>
       <div class="links">
-        <a class="plain" href="#about">About</a>
+        <a class="plain" href="#about">About me</a>
         <a class="plain" href="#skills">Skills</a>
         <a class="plain" href="#work">Experience</a>
         <a class="plain" href="#projects">Projects</a>
@@ -648,7 +672,7 @@
       <div class="bg-aurora" aria-hidden="true"><i></i><i></i><i></i></div>
       <div class="wrap about-grid">
         <div class="reveal">
-          <p class="eyebrow">About</p>
+          <p class="eyebrow">About me</p>
           <h2>From messy data to decisions people can trust.</h2>
           <p class="about-line">Microsoft Certified data scientist building AI and data solutions for public services.</p>
           <ul class="wins">
@@ -1248,9 +1272,9 @@
     toTop.addEventListener("click", () => scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" }));
     document.querySelectorAll("#totop").forEach(b => b.addEventListener("pointerdown", addRipple));
 
-    /* ---------- Middle of the page: floating maths, statistics and neural networks ----------
-       Symbols and formulas drift behind the content. Move the mouse or a finger and they float away;
-       click or tap and they scatter, while the neural networks fire a signal from input to output. */
+    /* ---------- Middle of the page: floating maths and statistics ----------
+       Symbols and formulas drift behind the content, with a bell curve and a regression plot.
+       Move the mouse or a finger and they float away; click or tap and they scatter and the plots refit. */
     (function () {
       const wrap = document.getElementById("midfx"), cv = document.getElementById("mid"), c = cv.getContext("2d");
       const VIOLET = "167,139,250";
@@ -1264,12 +1288,11 @@
 
       function build() {
         items = []; glyphs = [];
-        const narrow = W < 700, gap = narrow ? 560 : 520, kinds = ["net", "bell", "scatter", "net", "bell", "scatter"];
+        const narrow = W < 700, gap = narrow ? 560 : 520, kinds = ["bell", "scatter", "bell", "scatter", "bell", "scatter"];
         for (let y = 140, i = 0; y < H - 220; y += gap, i++) {
           const kind = kinds[i % kinds.length], w = narrow ? 150 : 210, h = narrow ? 100 : 130;
           const left = i % 2 === 0, x = narrow ? (left ? 8 : W - w - 8) : (left ? 18 : W - w - 18);
           const it = { kind, x, y: y + rnd(-40, 40), w, h, ph: rnd(0, 6.28), pts: null, act: null, flow: -1 };
-          if (kind === "net") { it.layers = [3, 4, 4, 2]; it.act = it.layers.map(n => new Array(n).fill(0)); }
           if (kind === "scatter") { it.pts = Array.from({ length: 14 }, (_, k) => ({ x: k / 13, y: .2 + .6 * (k / 13) + rnd(-.18, .18), jx: rnd(0, 6.28) })); it.fit = { a: .6, b: .2, ta: .6, tb: .2 }; }
           items.push(it);
         }
@@ -1285,19 +1308,6 @@
       }
 
       /* ----- the three mini diagrams ----- */
-      function drawNet(it, t) {
-        const cols = it.layers.length, pos = it.layers.map((n, li) => Array.from({ length: n }, (_, k) => [it.x + li * (it.w / (cols - 1)), it.y + (k + .5) * (it.h / n) + Math.sin(t * .8 + li + k) * 2]));
-        for (let li = 0; li < cols - 1; li++) for (const a of pos[li]) for (const b of pos[li + 1]) {
-          const s = Math.max(it.act[li][pos[li].indexOf(a)], it.act[li + 1][pos[li + 1].indexOf(b)]);
-          c.strokeStyle = ACT() + (.16 + s * .5) + ")"; c.lineWidth = 1; c.beginPath(); c.moveTo(a[0], a[1]); c.lineTo(b[0], b[1]); c.stroke();
-        }
-        pos.forEach((layer, li) => layer.forEach((p, k) => {
-          const near = Math.hypot(ptr.x - p[0], ptr.y - p[1]), hover = near < 90 ? 1 - near / 90 : 0, s = Math.max(it.act[li][k], hover);
-          c.fillStyle = ACT() + (.45 + s * .55) + ")"; c.beginPath(); c.arc(p[0], p[1], 4.5 + s * 3.5, 0, 7); c.fill();
-          if (s > .1) { c.strokeStyle = ACT() + s * .5 + ")"; c.lineWidth = 1.5; c.beginPath(); c.arc(p[0], p[1], 9 + s * 7, 0, 7); c.stroke(); }
-        }));
-        c.fillStyle = "rgba(" + ink + ",.5)"; c.font = "600 11px 'JetBrains Mono', monospace"; c.fillText("input", it.x - 4, it.y + it.h + 16); c.fillText("output", it.x + it.w - 34, it.y + it.h + 16);
-      }
       function drawBell(it, t) {
         const sig = 1 + Math.sin(t * .6 + it.ph) * .35, near = ptr.x > it.x - 20 && ptr.x < it.x + it.w + 20 && ptr.y > it.y - 30 && ptr.y < it.y + it.h + 30;
         const f = x => Math.exp(-x * x / (2 * sig * sig)) / (sig * 2.5066), mid = it.x + it.w / 2, base = it.y + it.h;
@@ -1324,7 +1334,7 @@
         c.fillStyle = "rgba(" + ink + ",.6)"; c.font = "600 11px 'JetBrains Mono', monospace"; c.fillText("\u0177 = " + f.a.toFixed(2) + "x + " + f.b.toFixed(2), it.x + 4, it.y + it.h + 16);
       }
 
-      function fire(it) { if (it.kind === "net") it.flow = 0; if (it.kind === "scatter") { it.pts.forEach(p => { p.y = Math.max(.05, Math.min(.95, .2 + .6 * p.x * rnd(.5, 1.4) + rnd(-.2, .2))); }); it.fit.ta = rnd(.2, .8); it.fit.tb = rnd(.1, .35); } }
+      function fire(it) { if (it.kind === "scatter") { it.pts.forEach(p => { p.y = Math.max(.05, Math.min(.95, .2 + .6 * p.x * rnd(.5, 1.4) + rnd(-.2, .2))); }); it.fit.ta = rnd(.2, .8); it.fit.tb = rnd(.1, .35); } }
 
       function frame(tms) {
         const t = tms / 1000, dt = Math.min(t - last, .05); last = t;
@@ -1351,14 +1361,7 @@
         // diagrams
         for (const it of items) {
           if (it.y + it.h < top || it.y > bot) continue;
-          if (it.kind === "net") {
-            if (!reduceMotion) {
-              if (it.flow < 0 && Math.random() < dt / 4) it.flow = 0;                       // fires by itself every few seconds
-              if (it.flow >= 0) { it.flow += dt * 2.6; const li = Math.floor(it.flow); if (li < it.layers.length) it.act[li].fill(1); else it.flow = -1; }
-              it.act.forEach(l => { for (let k = 0; k < l.length; k++) l[k] = Math.max(0, l[k] - dt * 1.4); });
-            }
-            drawNet(it, t);
-          } else if (it.kind === "bell") drawBell(it, t); else drawScatter(it, t);
+          if (it.kind === "bell") drawBell(it, t); else drawScatter(it, t);
         }
       }
       function loop(tms) { frame(tms); requestAnimationFrame(loop); }
