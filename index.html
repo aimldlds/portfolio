@@ -224,7 +224,6 @@
       background: radial-gradient(circle, var(--glow), transparent 65%);
     }
     .contact-grid { position: relative; display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; }
-    @media (max-width: 860px) { .contact-grid { grid-template-columns: 1fr; gap: 36px; } }
     .contact-lede { color: var(--muted); margin-bottom: 20px; max-width: 460px; }
     .contact-points { list-style: none; display: grid; gap: 10px; margin-bottom: 26px; color: var(--text); }
     .contact-points .pt { color: var(--accent); font-weight: 700; margin-right: 8px; }
@@ -438,8 +437,7 @@
     .sectfx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
     #projects .card { background: color-mix(in srgb, var(--surface) 80%, transparent); }
     @media (max-width: 860px) { #projects .card { background: color-mix(in srgb, var(--surface) 58%, transparent); } }
-    section.contact { padding-bottom: 270px; }
-    @media (max-width: 860px) { section.contact { padding-bottom: 250px; } }
+    section.contact { padding-bottom: 330px; }
 
 
     /* ================= Certifications: big tiles scattered across the space ================= */
@@ -558,28 +556,31 @@
       .contact-points li { font-size: 14px; }
     }
 
-    /* Contact, compact on phones: short text, small chips, name and email side by side */
+    /* Contact on phones: text on the left, form on the right, both small, with clear space above the globe */
     @media (max-width: 860px) {
-      section.contact { padding-top: 44px; padding-bottom: 210px; }
-      .contact-grid { gap: 18px; }
-      .contact h2 { margin-bottom: 8px; }
-      .contact-lede { font-size: 13.5px; margin-bottom: 10px; }
-      .contact-points { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-bottom: 12px; }
-      .contact-points li { font-size: 12.5px; }
-      .contact .cta { gap: 8px; }
-      .contact .cta .btn { padding: 8px 12px; font-size: 12.5px; }
-      .form-card { padding: 16px; border-radius: 16px; }
-      .form-card::after { border-radius: 15px; }
-      .form-label { margin-bottom: 6px; font-size: 13px; }
-      .topics { gap: 6px; margin-bottom: 12px; }
-      .topics span { padding: 6px 11px; font-size: 12.5px; }
-      .field-row { grid-template-columns: 1fr 1fr !important; gap: 8px; }
-      .field { margin-bottom: 10px; }
-      .field span { margin-bottom: 4px; font-size: 12px; }
-      .field input, .field textarea { padding: 9px 11px; }
-      .field textarea { min-height: 0; height: 84px; }
-      .send { padding: 11px; font-size: 15px; }
-      .form-note { margin-top: 8px; }
+      section.contact { padding-top: 40px; padding-bottom: 215px; }
+      .contact-grid { grid-template-columns: .82fr 1.18fr; gap: 12px; align-items: start; }
+      .contact .eyebrow { font-size: 10px; }
+      .contact h2 { font-size: clamp(19px, 5.8vw, 26px); margin-bottom: 8px; }
+      .contact h2::after { margin-top: 8px; width: 40px !important; }
+      .contact-lede { font-size: 12px; line-height: 1.45; margin-bottom: 8px; }
+      .contact-points { display: grid; gap: 4px; margin-bottom: 10px; }
+      .contact-points li { font-size: 11.5px; line-height: 1.35; }
+      .contact-points .pt { margin-right: 4px; }
+      .contact .cta { flex-direction: column; align-items: flex-start; gap: 6px; }
+      .contact .cta .btn { padding: 6px 10px; font-size: 11.5px; }
+      .form-card { padding: 12px; border-radius: 14px; box-shadow: none; }
+      .form-card::after { border-radius: 13px; }
+      .form-label { margin-bottom: 5px; font-size: 11.5px; }
+      .topics { gap: 5px; margin-bottom: 9px; }
+      .topics span { padding: 5px 9px; font-size: 11.5px; }
+      .field-row { grid-template-columns: 1fr !important; gap: 0; }
+      .field { margin-bottom: 8px; }
+      .field span { margin-bottom: 3px; font-size: 11px; }
+      .field input, .field textarea { padding: 8px 10px; border-radius: 10px; }
+      .field textarea { min-height: 0; height: 66px; }
+      .send { padding: 10px; font-size: 14px; border-radius: 10px; }
+      .form-note { margin-top: 6px; font-size: 12px; }
     }
   </style>
 </head>
@@ -1472,7 +1473,7 @@
       function size() {
         const dpr = Math.min(devicePixelRatio || 1, 1.25);
         W = sec.clientWidth; H = sec.clientHeight; cv.width = W * dpr; cv.height = H * dpr; c.setTransform(dpr, 0, 0, dpr, 0, 0);
-        R = Math.min(W * .56, 480); const cap = W < 860 ? 230 : 250; cx = W / 2; cy = H - cap + R;
+        R = Math.min(W * .56, 480); const cap = W < 860 ? 160 : 250; cx = W / 2; cy = H - cap + R;
         const n = W < 700 ? 190 : 300; pts = []; lit = new Array(n).fill(0);
         for (let i = 0; i < n; i++) { const y = 1 - (i / (n - 1)) * 2, r = Math.sqrt(1 - y * y), th = i * 2.399963; pts.push([Math.cos(th) * r, y, Math.sin(th) * r]); }
         links = [];
