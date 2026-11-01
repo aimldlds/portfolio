@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mohsin Chaudhary | Data Scientist</title>
-  <meta name="description" content="Mohsin Chaudhary is a Data Scientist in Bath, UK. Applied machine learning, LLMs and forecasting for public services, built on Azure.">
+  <title>Mohsin Chaudhary | Microsoft Certified Data Scientist</title>
+  <meta name="description" content="Mohsin Chaudhary is a Data Scientist in London, UK. Applied machine learning, LLMs and forecasting for public services, built on Azure.">
   <link rel="canonical" href="https://mohsinchaudhary.com/">
 
   <!-- Share preview (LinkedIn, WhatsApp...). Add a 1200x630 og-image.png to the folder for the picture. -->
@@ -81,7 +81,9 @@
     .links { display: flex; align-items: center; gap: 22px; font-size: 15px; }
     .links a.plain { color: var(--muted); transition: color .2s; }
     .links a.plain:hover { color: var(--text); }
-    @media (max-width: 760px) { .links a.plain { display: none; } }
+    /* On phones keep the nav usable: smaller gaps, and hide only the less important links */
+    @media (max-width: 760px) { .links { gap: 14px; } .links a.plain:nth-of-type(-n+2) { display: none; } .links a.plain { font-size: 14px; } }
+    @media (max-width: 480px) { .links a.plain { display: none; } }
     .icon-btn {
       width: 38px; height: 38px; border-radius: 10px; cursor: pointer;
       background: transparent; color: var(--text); border: 1px solid var(--line);
@@ -112,11 +114,8 @@
     }
     /* Animated network graph sits behind the content */
     #net { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-    .hero .wrap { position: relative; display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center; }
-    @media (max-width: 860px) {
-      .hero .wrap { grid-template-columns: 1fr; gap: 30px; }
-      .portrait-col { order: -1; }
-    }
+    .hero .wrap { position: relative; z-index: 2; }
+    .hero-text { max-width: 540px; }
 
     .status {
       display: inline-flex; align-items: center; gap: 10px;
@@ -143,50 +142,23 @@
     .socials a { color: var(--muted); }
     .socials a:hover { color: var(--accent); }
 
-    /* ----- Portrait ----- */
-    .portrait-col { display: flex; justify-content: center; }
-    .portrait { position: relative; width: min(400px, 78vw); aspect-ratio: 4 / 5; }
-    /* Soft glowing frame behind the photo */
-    .portrait::before {
-      content: ""; position: absolute; inset: -14px; border-radius: 36px;
-      background: conic-gradient(from 140deg, var(--accent), var(--accent-2), var(--accent));
-      filter: blur(22px); opacity: .45; animation: spin 14s linear infinite;
+    /* ----- Hero photo: one large photo fills the right side and fades into the dark background ----- */
+    .hero-photo {
+      position: absolute; top: 0; right: 0; width: min(54%, 860px); height: 100%;
+      object-fit: cover; object-position: center 18%;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 45%), linear-gradient(to bottom, #000 80%, transparent 100%);
+      -webkit-mask-composite: source-in;
+              mask-image: linear-gradient(to right, transparent 0%, #000 45%), linear-gradient(to bottom, #000 80%, transparent 100%);
+              mask-composite: intersect;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .frame {
-      position: relative; width: 100%; height: 100%; border-radius: 28px; overflow: hidden;
-      border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--line));
-      background: var(--surface);
+    :root[data-theme="light"] .hero-photo { opacity: .92; }
+    /* On phones the photo becomes a faded backdrop behind the text */
+    @media (max-width: 860px) {
+      .hero-photo { width: 100%; opacity: .22; -webkit-mask-image: linear-gradient(to bottom, #000 30%, transparent 100%); mask-image: linear-gradient(to bottom, #000 30%, transparent 100%); -webkit-mask-composite: initial; mask-composite: initial; }
     }
-    /* The portrait slider: photos stack on top of each other and fade between */
-    .frame img.slide {
-      position: absolute; inset: 0; width: 100%; height: 100%; display: block;
-      object-fit: cover; object-position: center top;
-      opacity: 0; transition: opacity .9s ease;
-    }
-    .frame img.slide.on { opacity: 1; }
-    .no-photo .slide { display: none; }
-    /* Little dots at the bottom of the frame to pick a photo */
-    .dots {
-      position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 2;
-      display: flex; gap: 10px; padding: 7px 12px; border-radius: 999px;
-      background: rgba(0,0,0,.38); backdrop-filter: blur(6px);
-    }
-    .dots button {
-      position: relative; width: 8px; height: 8px; padding: 0; border: 0; border-radius: 6px; cursor: pointer;
-      background: rgba(255,255,255,.55); transition: width .25s, background .25s;
-    }
-    .dots button::before { content: ""; position: absolute; inset: -10px -5px; }   /* bigger tap area on phones */
-    .dots button.on { width: 22px; background: var(--accent); }
-    /* Shown only while photo.jpg is missing */
-    .monogram {
-      display: none; position: absolute; inset: 0; align-items: center; justify-content: center;
-      font-family: "Fraunces", serif; font-size: 110px; font-weight: 700; color: var(--accent);
-      background: linear-gradient(160deg, var(--surface), var(--bg-2));
-    }
-    .no-photo .monogram { display: flex; }
 
-    /* Floating skill chips around the photo */
+    /* Floating skill chips sit over the photo, on the right */
+    .chips { position: absolute; inset: 0; pointer-events: none; }
     .chip {
       position: absolute; padding: 8px 14px; border-radius: 12px; font-size: 13px;
       background: color-mix(in srgb, var(--surface) 88%, transparent); backdrop-filter: blur(8px);
@@ -194,12 +166,11 @@
       animation: float 6s ease-in-out infinite;
     }
     .chip b { color: var(--accent); font-weight: 500; }
-    .chip.c1 { top: 8%;  left: -14%; }
-    .chip.c2 { top: 40%; right: -16%; animation-delay: -2s; }
-    .chip.c3 { bottom: 8%; left: -10%; animation-delay: -4s; }
+    .chip.c1 { top: 22%; right: 22%; }
+    .chip.c2 { top: 48%; right: 6%; animation-delay: -2s; }
+    .chip.c3 { bottom: 18%; right: 26%; animation-delay: -4s; }
     @keyframes float { 50% { transform: translateY(-10px); } }
-    /* On phones the chips would cover the photo, so they are hidden there */
-    @media (max-width: 640px) { .chip { display: none; } }
+    @media (max-width: 860px) { .chips { display: none; } }
 
     .scroll-hint { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); color: var(--muted); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
     @media (max-height: 720px), (max-width: 860px) { .scroll-hint { display: none; } }
@@ -210,6 +181,8 @@
     @media (max-width: 700px) { .stat .num { font-size: 30px; } .stat .lbl { font-size: 13px; } }
     .stat .num { font-family: "Fraunces", serif; font-size: 40px; color: var(--accent); line-height: 1; }
     .stat .lbl { color: var(--muted); font-size: 14px; margin-top: 8px; }
+    .stat .num.txt { font-size: 34px; line-height: 1.15; }
+    @media (max-width: 700px) { .stat .num.txt { font-size: 22px; } }
 
     /* ================= Sections ================= */
     section.block { padding: 84px 0; }
@@ -219,11 +192,12 @@
     @media (max-width: 800px) { .about-grid { grid-template-columns: 1fr; } }
     .about-grid p { color: var(--muted); margin-bottom: 14px; }
     .about-grid p strong { color: var(--text); font-weight: 500; }
+    .wins { list-style: none; margin: 4px 0 18px; display: grid; gap: 10px; }
+    .wins li { position: relative; padding-left: 22px; color: var(--muted); }
+    .wins li::before { content: ""; position: absolute; left: 0; top: .6em; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+    .wins li strong { color: var(--text); font-weight: 600; }
     /* Photo above the "Quick facts" card */
-    .about-photo {
-      display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: center 12%;
-      border-radius: 18px; border: 1px solid var(--line); margin-bottom: 18px;
-    }
+    .about-photo { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; object-position: center 25%; border-radius: 18px; border: 1px solid var(--line); margin-bottom: 18px; }
 
     .card {
       position: relative; background: var(--surface); border: 1px solid var(--line);
@@ -236,6 +210,7 @@
     .card p { color: var(--muted); margin-bottom: 10px; }
     .card ul { color: var(--muted); padding-left: 20px; }
     .card li { margin-bottom: 5px; }
+    .card li strong { color: var(--text); font-weight: 600; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
     @media (max-width: 760px) { .grid-2 { grid-template-columns: 1fr; } }
     .stack { display: grid; gap: 18px; }
@@ -264,6 +239,10 @@
     /* ================= Scroll reveal ================= */
     .js .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
     .js .reveal.in { opacity: 1; transform: none; }
+    /* After the reveal finishes, drop the slow transform transition so the 3D card tilt follows the mouse */
+    .js .card.reveal.in { transition: opacity .7s ease, border-color .25s, transform .15s; }
+
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
 
     /* Respect people who turn animations off */
     @media (prefers-reduced-motion: reduce) {
@@ -293,17 +272,24 @@
 
   <!-- ================= HERO: the landing screen ================= -->
   <header class="hero" id="top">
+    <!-- Hero photo: replace photo-2.jpg to change it. It fills the right side and fades into the background. -->
+    <img class="hero-photo" src="photo-2.jpg" width="900" height="1125" alt="Mohsin Chaudhary in a navy suit">
+    <div class="chips" aria-hidden="true">
+      <span class="chip c1 mono"><b>●</b> Python · SQL</span>
+      <span class="chip c2 mono"><b>●</b> Azure ML · Fabric</span>
+      <span class="chip c3 mono"><b>●</b> LLMs · RAG</span>
+    </div>
     <canvas id="net" aria-hidden="true"></canvas>
 
     <div class="wrap">
-      <!-- Left: who I am -->
-      <div>
-        <span class="status"><span class="dot"></span> Data Scientist · Bath, UK</span>
+      <!-- Who I am -->
+      <div class="hero-text">
+        <span class="status"><span class="dot"></span> Data Scientist · London, UK</span>
 
         <h1>Hi, I'm <span class="grad">Mohsin Chaudhary.</span></h1>
 
         <!-- Rotating line, typed by the script below -->
-        <p class="role-line">I'm a Data Scientist who <span class="typed" id="typed"></span><span class="caret"></span></p>
+        <p class="role-line">I'm a Microsoft Certified Data Scientist who <span class="typed" id="typed"></span><span class="caret"></span></p>
 
         <p class="lede">
           I turn data into something people can understand and act on. I care about models that are
@@ -324,23 +310,6 @@
         </div>
       </div>
 
-      <!-- Right: portrait slider. Photos: photo.jpg, photo-2.jpg, photo-3.jpg (same folder as this file).
-           To change a photo, replace the file. To add one, copy an <img class="slide"> line below. -->
-      <div class="portrait-col">
-        <div class="portrait" id="portrait">
-          <div class="frame">
-            <img class="slide on" src="photo.jpg" width="900" height="1125" alt="Mohsin Chaudhary seated in a white shirt"
-                 onerror="document.getElementById('portrait').classList.add('no-photo');">
-            <img class="slide" src="photo-2.jpg" width="900" height="1125" alt="Mohsin Chaudhary in a navy suit" style="object-position:center 20%">
-            <img class="slide" src="photo-3.jpg" width="900" height="1125" alt="Mohsin Chaudhary in a velvet dinner jacket" style="object-position:center 15%">
-            <div class="monogram">MC</div>
-            <div class="dots" id="dots" role="group" aria-label="Choose photo"></div>
-          </div>
-          <span class="chip c1 mono"><b>●</b> Python · SQL</span>
-          <span class="chip c2 mono"><b>●</b> Azure ML · Fabric</span>
-          <span class="chip c3 mono"><b>●</b> LLMs · RAG</span>
-        </div>
-      </div>
     </div>
 
     <div class="scroll-hint">Scroll</div>
@@ -349,9 +318,9 @@
   <!-- ================= Stats strip (numbers count up when scrolled into view) ================= -->
   <div class="stats">
     <div class="wrap">
-      <div class="stat reveal"><div class="num" data-target="5">0</div><div class="lbl">Microsoft Azure certifications</div></div>
-      <div class="stat reveal"><div class="num" data-target="2">0</div><div class="lbl">Degrees: MSc and B.Tech</div></div>
-      <div class="stat reveal"><div class="num" data-target="0.97" data-decimals="2">0</div><div class="lbl">Evidence recall in my RAG project (baseline 0.53)</div></div>
+      <div class="stat reveal"><div class="num" data-target="6">0</div><div class="lbl">Microsoft certifications across AI, data and Power BI</div></div>
+      <div class="stat reveal"><div class="num txt">Gold</div><div class="lbl">Hallam Gold Award holder, Sheffield Hallam University</div></div>
+      <div class="stat reveal"><div class="num txt">3 hrs → 20 min</div><div class="lbl">Policy lookup time for 60+ staff, using an LLM tool I built at Somerset</div></div>
     </div>
   </div>
 
@@ -363,19 +332,25 @@
         <div class="reveal">
           <p class="eyebrow">About</p>
           <h2>Machine learning people can actually trust.</h2>
-          <p>I'm a <strong>data scientist based in Bath, UK</strong>. I moved from India to England in 2023 to study for my Master's at Sheffield Hallam University, after a B.Tech in Computer Science at Amity University.</p>
-          <p>I like the part of machine learning where messy, sensitive, real-world data meets real decisions. I care about <strong>explainable models</strong>, clear data lineage, and pipelines that keep running after the demo.</p>
+          <p>I'm a <strong>Microsoft Certified data scientist based in London, UK</strong>, building AI, machine learning and data engineering solutions for public services, from Adult Social Care and Housing to Children's Services. Before that, I worked on water-quality and leakage telemetry at Wessex Water.</p>
+          <ul class="wins">
+            <li><strong>Risk model with real reach:</strong> 0.86 AUC and 81% recall, surfacing the top 15% highest-risk cases from a waiting list of about 4,000.</li>
+            <li><strong>Time handed back to caseworkers:</strong> a triage tool that cut manual case review by about 40%, saving roughly 12 hours of effort every week.</li>
+            <li><strong>Faster, safer delivery:</strong> MLOps and CI/CD that took release cycles from 2 weeks to 2 days.</li>
+            <li><strong>Earlier warnings:</strong> leaks flagged up to 48 hours sooner, and recall on rare river-quality events lifted from 0.58 to 0.79.</li>
+          </ul>
+          <p>What ties it together is trust: <strong>explainable models</strong>, clear data lineage, responsible AI, and pipelines that keep running long after the demo.</p>
         </div>
         <div class="reveal">
-          <img class="about-photo" src="about.jpg" width="900" height="1125" loading="lazy" alt="Mohsin Chaudhary in a navy suit, looking ahead">
+          <img class="about-photo" src="photo.jpg" width="900" height="1125" loading="lazy" alt="Mohsin Chaudhary seated in a white shirt">
           <div class="card" data-tilt>
             <h3>Quick facts</h3>
             <p class="meta">The short version</p>
             <ul>
-              <li>Based in Bath, UK</li>
-              <li>MSc, Sheffield Hallam University</li>
-              <li>B.Tech Computer Science, Amity University</li>
-              <li>Works across Python, SQL and Azure</li>
+              <li>Based in London, UK</li>
+              <li>6 Microsoft certifications, including Azure AI Engineer and Azure Data Scientist</li>
+              <li>Works across Python, SQL, Azure, Microsoft Fabric and Azure OpenAI</li>
+              <li>MSc Big Data Analytics, Sheffield Hallam University</li>
             </ul>
           </div>
         </div>
@@ -430,21 +405,29 @@
         <div class="stack">
           <div class="card reveal" data-tilt>
             <h3>Data Scientist, Somerset Council</h3>
-            <p class="meta">July 2026 – present · Strategy, Performance and Communication</p>
+            <p class="meta">July 2026 – present · Government administration</p>
             <ul>
-              <li>Leading a risk prioritisation tool for Adult Social Care: waiting list ranking, deterioration detection and demand forecasting.</li>
-              <li>Using Azure OpenAI in a governed environment to pull structured indicators from free-text case notes, with prompts validated so results are consistent and explainable.</li>
-              <li>Data scientist on placement forecasting for Children's Services to support financial planning.</li>
+              <li>Deliver AI and ML across Adult Social Care, Housing and Children's Services, supporting services for over 570,000 residents.</li>
+              <li>Built risk-scoring models reaching 0.86 AUC and 81% recall, surfacing the top 15% highest-risk cases from a waiting list of about 4,000.</li>
+              <li>Built a 3-engine risk prioritisation tool (waiting-list ranking, deterioration detection, demand forecasting) with a triage UI, cutting manual case review by about 40% and roughly 12 hours of weekly triage effort.</li>
+              <li>Set up MLOps and CI/CD with a Dev/UAT/Prod branch strategy, cutting release cycles from 2 weeks to 2 days.</li>
+              <li>Built LLM tools on Azure AI that cut document and policy lookup from about 3 hours to under 20 minutes for 60+ staff.</li>
+              <li>Data scientist on placement forecasting for Children's Services to support medium-term financial planning.</li>
+              <li>Apply model governance, explainable AI and data lineage to every model taken to production.</li>
             </ul>
+            <div class="tags"><span class="tag">Python</span><span class="tag">SQL</span><span class="tag">Azure ML</span><span class="tag">Microsoft Fabric</span><span class="tag">Azure OpenAI</span></div>
           </div>
           <div class="card reveal" data-tilt>
-            <h3>Data Specialist (placement), Wessex Water</h3>
-            <p class="meta">One-year industry placement · part of MSc</p>
+            <h3>Data Scientist, Wessex Water</h3>
+            <p class="meta">June 2024 – December 2025</p>
+            <p>Applied machine learning and data engineering to water network and river data, turning raw telemetry into earlier warnings and decisions operational teams could act on.</p>
             <ul>
-              <li>Leakage detection using network flow and pressure data.</li>
-              <li>River water quality analysis.</li>
-              <li>Data pipelines on Azure.</li>
+              <li><strong>River water quality prediction:</strong> built classification models for E. coli and Enterococci levels. Tackling severe class imbalance with SMOTE and threshold tuning raised recall on the rare, high-risk class from 0.58 to 0.79, so far fewer poor-quality events went unflagged. Models were trained and versioned in Azure ML pipelines.</li>
+              <li><strong>Leakage detection from flow and pressure data:</strong> designed anomaly detection that combined statistical modelling with threshold-based alerting, flagging potential leaks up to 48 hours earlier than manual review.</li>
+              <li><strong>Telemetry data pipelines:</strong> automated ingestion and transformation in Azure Data Factory, PySpark and Databricks across 10 million+ rows of time-series data, saving about 8 hours of manual data preparation every week. Used KQL and SQL in Synapse and Log Analytics to trace data quality failures to their root cause.</li>
+              <li><strong>Reporting for operations:</strong> delivered 5 Power BI dashboards used by 40+ operational staff, and presented findings to non-technical stakeholders.</li>
             </ul>
+            <div class="tags"><span class="tag">Azure ML</span><span class="tag">PySpark</span><span class="tag">Databricks</span><span class="tag">Anomaly detection</span><span class="tag">KQL</span><span class="tag">Power BI</span></div>
           </div>
         </div>
       </div>
@@ -459,7 +442,7 @@
           <div class="card reveal" data-tilt>
             <h3>Knowledge-graph RAG over scientific papers</h3>
             <p class="meta">Independent project · June 2026</p>
-            <p>A pipeline that reads scientific paper images, builds a knowledge graph from them, and answers questions with evidence. Built against a timed challenge deadline.</p>
+            <p>Question answering over scientific documents that retrieves across text, page layout and figures, and a knowledge graph (about 11,800 nodes, 17,700 edges) of LLM-extracted entities. Sentence-transformer and CLIP embeddings are fused with graph traversal, and every answer must cite its supporting chunk, figure region or graph fact.</p>
             <p><span class="big-number">0.97 vs 0.53</span><br>mean evidence recall, graph-enhanced vs baseline, on a 10-question test.</p>
             <div class="tags"><span class="tag">OCR</span><span class="tag">NetworkX</span><span class="tag">CLIP</span><span class="tag">spaCy</span></div>
             <p style="margin-top:14px"><a href="https://github.com/aimldlds/PUBLAYER-RAG" target="_blank" rel="noopener">View on GitHub →</a></p>
@@ -471,15 +454,30 @@
             <div class="tags"><span class="tag">Machine learning</span><span class="tag">Web app</span><span class="tag">Heroku</span></div>
             <p style="margin-top:14px"><a href="https://github.com/aimldlds/MedicalRecommendationSystem" target="_blank" rel="noopener">View on GitHub →</a></p>
           </div>
+          <div class="card reveal" data-tilt>
+            <h3>IPL win probability predictor</h3>
+            <p class="meta">End-to-end project · 2022</p>
+            <p>Predicts the winning and losing probability of the chasing team in an IPL match with logistic regression, from live features such as current and required run rate, wickets left, runs left and balls left. Deployed as a web app on Heroku.</p>
+            <div class="tags"><span class="tag">Logistic regression</span><span class="tag">Scikit-Learn</span><span class="tag">Heroku</span></div>
+            <p style="margin-top:14px"><a href="https://github.com/aimldlds/Ipl-win-Probability-Predictor" target="_blank" rel="noopener">View on GitHub →</a></p>
+          </div>
+          <div class="card reveal" data-tilt>
+            <h3>Laptop price predictor</h3>
+            <p class="meta">End-to-end project · 2022</p>
+            <p>A Random Forest regression model that predicts laptop prices from brand, type, RAM, weight, CPU, GPU, resolution, storage and OS, with feature engineering to pull hidden signal out of the raw columns. Deployed as a web app on Heroku.</p>
+            <div class="tags"><span class="tag">Random Forest</span><span class="tag">Feature engineering</span><span class="tag">Heroku</span></div>
+            <p style="margin-top:14px"><a href="https://github.com/aimldlds/Laptop-Price-Predictor" target="_blank" rel="noopener">View on GitHub →</a></p>
+          </div>
         </div>
 
         <h3 class="reveal" style="margin:44px 0 16px;font-size:24px">Certifications</h3>
         <div class="tags reveal">
-          <span class="tag">DP-100 Azure Data Scientist</span>
-          <span class="tag">AI-102 Azure AI Engineer</span>
-          <span class="tag">DP-600 Fabric Analytics Engineer</span>
-          <span class="tag">DP-700 Fabric Data Engineer</span>
-          <span class="tag">PL-300 Power BI Data Analyst</span>
+          <span class="tag">Microsoft Certified: SQL AI Developer Associate (DP-800)</span>
+          <span class="tag">Microsoft Certified: Azure AI Engineer Associate (AI-102)</span>
+          <span class="tag">Microsoft Certified: Azure Data Scientist Associate (DP-100)</span>
+          <span class="tag">Microsoft Certified: Fabric Analytics Engineer Associate (DP-600)</span>
+          <span class="tag">Microsoft Certified: Fabric Data Engineer Associate (DP-700)</span>
+          <span class="tag">Microsoft Certified: Power BI Data Analyst Associate (PL-300)</span>
         </div>
       </div>
     </section>
@@ -534,33 +532,6 @@
       else { deleting = false; pi = (pi + 1) % phrases.length; setTimeout(type, 350); }
     }
     if (reduceMotion) typedEl.textContent = phrases[0]; else type();
-
-    /* ---------- Portrait slider ----------
-       Fades between the photos every 5 seconds. Dots let people pick one.
-       It pauses while the mouse is over the photo, and never auto-plays if animations are off. */
-    const slides = [...document.querySelectorAll(".slide")];
-    const dotsBox = document.getElementById("dots");
-    const portraitEl = document.getElementById("portrait");
-    let slideNow = 0, slideTimer;
-    function showSlide(i) {
-      slideNow = i;
-      slides.forEach((s, k) => s.classList.toggle("on", k === i));
-      [...dotsBox.children].forEach((d, k) => d.classList.toggle("on", k === i));
-    }
-    function startSlides() {
-      clearInterval(slideTimer);
-      if (!reduceMotion && slides.length > 1) slideTimer = setInterval(() => showSlide((slideNow + 1) % slides.length), 5000);
-    }
-    slides.forEach((_, i) => {                       // one dot per photo
-      const b = document.createElement("button");
-      b.setAttribute("aria-label", "Show photo " + (i + 1));
-      b.addEventListener("click", () => { showSlide(i); startSlides(); });
-      dotsBox.appendChild(b);
-    });
-    if (slides.length < 2) dotsBox.style.display = "none";
-    showSlide(0); startSlides();
-    portraitEl.addEventListener("pointerenter", () => clearInterval(slideTimer));
-    portraitEl.addEventListener("pointerleave", startSlides);
 
     /* ---------- Network graph behind the hero ----------
        Dots drift slowly and link up when close. The mouse pulls nearby dots in,
@@ -647,7 +618,7 @@
         counter.unobserve(el);
       });
     }, { threshold: .6 });
-    document.querySelectorAll(".num").forEach(el => counter.observe(el));
+    document.querySelectorAll(".num[data-target]").forEach(el => counter.observe(el));
 
     /* ---------- Skill filter buttons ---------- */
     document.getElementById("filters").addEventListener("click", e => {
