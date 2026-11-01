@@ -72,7 +72,7 @@
     nav {
       position: fixed; inset: 0 0 auto 0; z-index: 50;
       background: color-mix(in srgb, var(--bg) 78%, transparent);
-      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--line);
     }
     nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 62px; }
@@ -168,7 +168,7 @@
     .chips { position: absolute; inset: 0; pointer-events: none; }
     .chip {
       position: absolute; padding: 8px 14px; border-radius: 12px; font-size: 13px;
-      background: color-mix(in srgb, var(--surface) 88%, transparent); backdrop-filter: blur(8px);
+      background: color-mix(in srgb, var(--surface) 88%, transparent); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
       border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(0,0,0,.25);
       animation: float 6s ease-in-out infinite;
     }
@@ -177,7 +177,15 @@
     .chip.c2 { top: 48%; right: 6%; animation-delay: -2s; }
     .chip.c3 { bottom: 18%; right: 26%; animation-delay: -4s; }
     @keyframes float { 50% { transform: translateY(-10px); } }
-    @media (max-width: 860px) { .chips { display: none; } }
+    /* On phones the chips become a floating row over the bottom of the photo */
+    @media (max-width: 860px) {
+      .chips {
+        inset: auto; left: 0; right: 0; top: calc(62px + min(62vh, 520px) - 112px); height: auto;
+        display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 0 16px; z-index: 2;
+      }
+      .chip { position: static; font-size: 12px; padding: 6px 12px; }
+      .chip.c2 { animation-delay: -1s; } .chip.c3 { animation-delay: -2s; }
+    }
 
     .scroll-hint { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); color: var(--muted); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
     @media (max-height: 720px), (max-width: 860px) { .scroll-hint { display: none; } }
@@ -223,6 +231,8 @@
     .stack { display: grid; gap: 18px; }
 
     .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    a.tag.cert { transition: background .2s, transform .2s; }
+    a.tag.cert:hover { background: color-mix(in srgb, var(--accent) 24%, transparent); transform: translateY(-1px); }
     .tag { font-size: 13px; padding: 4px 12px; border-radius: 999px; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
 
     /* Skill filter */
@@ -238,10 +248,90 @@
     .big-number { font-family: "Fraunces", serif; font-size: 26px; color: var(--accent); }
 
     /* ================= Contact ================= */
-    .contact { text-align: center; background: var(--bg-2); border-top: 1px solid var(--line); }
-    .contact p { color: var(--muted); max-width: 520px; margin: 0 auto 26px; }
-    .contact .cta { justify-content: center; }
+    .contact { background: var(--bg-2); border-top: 1px solid var(--line); position: relative; overflow: hidden; }
+    .contact::before {
+      content: ""; position: absolute; width: 520px; height: 520px; right: -120px; top: -160px; pointer-events: none;
+      background: radial-gradient(circle, var(--glow), transparent 65%);
+    }
+    .contact-grid { position: relative; display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; }
+    @media (max-width: 860px) { .contact-grid { grid-template-columns: 1fr; gap: 36px; } }
+    .contact-lede { color: var(--muted); margin-bottom: 20px; max-width: 460px; }
+    .contact-points { list-style: none; display: grid; gap: 10px; margin-bottom: 26px; color: var(--text); }
+    .contact-points .pt { color: var(--accent); font-weight: 700; margin-right: 8px; }
+
+    .form-card {
+      background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 28px;
+      box-shadow: 0 24px 60px rgba(0,0,0,.25);
+    }
+    .form-label { color: var(--muted); font-size: 14px; margin-bottom: 10px; }
+    .topics { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .topics label { cursor: pointer; }
+    .topics input { position: absolute; opacity: 0; pointer-events: none; }
+    .topics span {
+      display: inline-block; padding: 8px 14px; border-radius: 999px; font-size: 14px;
+      border: 1px solid var(--line); color: var(--muted); transition: all .2s;
+    }
+    .topics label:hover span { border-color: var(--accent); color: var(--text); }
+    .topics input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
+    .topics input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 560px) { .field-row { grid-template-columns: 1fr; } }
+    .field { display: block; margin-bottom: 14px; }
+    .field span { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    .field input, .field textarea {
+      width: 100%; font: inherit; font-size: 16px; color: var(--text); background: var(--bg);
+      border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; transition: border-color .2s, box-shadow .2s;
+    }
+    .field textarea { resize: vertical; min-height: 120px; }
+    .field input:focus, .field textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--glow); }
+    .field input.bad, .field textarea.bad { border-color: #f87171; }
+    .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+    .send { width: 100%; justify-content: center; cursor: pointer; font-size: 16px; }
+    .form-note { min-height: 1.4em; margin-top: 12px; font-size: 14px; color: var(--muted); text-align: center; }
+    .form-note.ok { color: var(--accent); }
+    .form-note.err { color: #f87171; }
     footer { padding: 28px 0 40px; color: var(--muted); font-size: 14px; text-align: center; border-top: 1px solid var(--line); }
+
+
+    /* ================= Interactive touches ================= */
+    /* Thin bar at the very top that fills as you scroll */
+    #progress {
+      position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 60;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transform: scaleX(0); transform-origin: 0 50%;
+    }
+    /* Hero text rises in one piece at a time when the page loads */
+    @keyframes rise { from { opacity: 0; transform: translateY(20px); } }
+    .hero-text > * { animation: rise .8s cubic-bezier(.2,.7,.2,1) both; }
+    .hero-text > :nth-child(1) { animation-delay: .05s; }
+    .hero-text > :nth-child(2) { animation-delay: .15s; }
+    .hero-text > :nth-child(3) { animation-delay: .28s; }
+    .hero-text > :nth-child(4) { animation-delay: .4s; }
+    .hero-text > :nth-child(5) { animation-delay: .52s; }
+    .hero-text > :nth-child(6) { animation-delay: .64s; }
+    @keyframes fadein { from { opacity: 0; } }
+    .hero-photo { animation: fadein 1.4s ease both; }
+    /* Photo and chips drift slightly with the mouse (set from the script) */
+    .hero-photo, .chips { will-change: transform; }
+    /* A soft spotlight follows the cursor across any card */
+    .card::after {
+      content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .3s;
+      background: radial-gradient(340px circle at var(--mx, 50%) var(--my, 50%), var(--glow), transparent 65%);
+    }
+    .card:hover::after { opacity: 1; }
+    /* Skill cards pop in when a filter shows them */
+    @keyframes pop { from { opacity: 0; transform: scale(.94) translateY(10px); } }
+    .skill-card:not(.hide) { animation: pop .45s cubic-bezier(.2,.7,.2,1) both; }
+    .btn { will-change: transform; }
+
+    /* Touch screens have no hover, so taps get their own feedback */
+    .card.touched::after { opacity: 1; }
+    @media (hover: none) {
+      .btn:hover { transform: none; }
+      .btn:active { transform: scale(.95); }
+      .filter:active, .topics span:active { transform: scale(.94); }
+    }
 
     /* ================= Scroll reveal ================= */
     .js .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
@@ -261,6 +351,8 @@
 </head>
 
 <body>
+
+  <div id="progress" aria-hidden="true"></div>
 
   <!-- ================= Navigation ================= -->
   <nav>
@@ -327,7 +419,7 @@
     <div class="wrap">
       <div class="stat reveal"><div class="num" data-target="6">0</div><div class="lbl">Microsoft certifications across AI, data and Power BI</div></div>
       <div class="stat reveal"><div class="num txt">Gold</div><div class="lbl">Hallam Gold Award holder, Sheffield Hallam University</div></div>
-      <div class="stat reveal"><div class="num txt">3 hrs → 20 min</div><div class="lbl">Policy lookup time for 60+ staff, using an LLM tool I built at Somerset</div></div>
+      <div class="stat reveal"><div class="num txt">3 hrs → 20 min</div><div class="lbl">Policy lookup time for 60+ staff, using an LLM tool I built at Somerset Council</div></div>
     </div>
   </div>
 
@@ -477,29 +569,58 @@
           </div>
         </div>
 
-        <h3 class="reveal" style="margin:44px 0 16px;font-size:24px">Certifications</h3>
+        <h3 class="reveal" style="margin:44px 0 6px;font-size:24px">Certifications</h3>
+        <p class="reveal" style="color:var(--muted);font-size:14px;margin-bottom:14px">Click a certification to view the certificate.</p>
         <div class="tags reveal">
-          <span class="tag">Microsoft Certified: SQL AI Developer Associate (DP-800)</span>
-          <span class="tag">Microsoft Certified: Azure AI Engineer Associate (AI-102)</span>
-          <span class="tag">Microsoft Certified: Azure Data Scientist Associate (DP-100)</span>
-          <span class="tag">Microsoft Certified: Fabric Analytics Engineer Associate (DP-600)</span>
-          <span class="tag">Microsoft Certified: Fabric Data Engineer Associate (DP-700)</span>
-          <span class="tag">Microsoft Certified: Power BI Data Analyst Associate (PL-300)</span>
+          <a class="tag cert" href="certificates/dp-800-sql-ai-developer.pdf" target="_blank" rel="noopener">Microsoft Certified: SQL AI Developer Associate (DP-800) ↗</a>
+          <a class="tag cert" href="certificates/ai-102-azure-ai-engineer.pdf" target="_blank" rel="noopener">Microsoft Certified: Azure AI Engineer Associate (AI-102) ↗</a>
+          <a class="tag cert" href="certificates/dp-100-azure-data-scientist.pdf" target="_blank" rel="noopener">Microsoft Certified: Azure Data Scientist Associate (DP-100) ↗</a>
+          <a class="tag cert" href="certificates/dp-600-fabric-analytics-engineer.pdf" target="_blank" rel="noopener">Microsoft Certified: Fabric Analytics Engineer Associate (DP-600) ↗</a>
+          <a class="tag cert" href="certificates/dp-700-fabric-data-engineer.pdf" target="_blank" rel="noopener">Microsoft Certified: Fabric Data Engineer Associate (DP-700) ↗</a>
+          <a class="tag cert" href="certificates/pl-300-power-bi-data-analyst.pdf" target="_blank" rel="noopener">Microsoft Certified: Power BI Data Analyst Associate (PL-300) ↗</a>
         </div>
       </div>
     </section>
 
     <!-- ================= Contact ================= -->
     <section class="block contact" id="contact">
-      <div class="wrap reveal">
-        <p class="eyebrow">Contact</p>
-        <h2>Let's talk.</h2>
-        <p>Open to conversations about data science roles, research, and projects in public services and health.</p>
-        <div class="cta">
-          <a class="btn primary" href="mailto:ms.mohsinchaudhary@gmail.com">Email me</a>
-          <a class="btn" href="https://www.linkedin.com/in/mohsin37" target="_blank" rel="noopener">LinkedIn</a>
-          <a class="btn" href="https://github.com/aimldlds" target="_blank" rel="noopener">GitHub</a>
+      <div class="wrap contact-grid">
+        <div class="reveal">
+          <p class="eyebrow">Contact</p>
+          <h2>Let's work together.</h2>
+          <p class="contact-lede">Hiring for a data science role, planning a project in public services or health, or just want to talk about ML and LLMs? Send me a note and I'll reply personally.</p>
+          <ul class="contact-points">
+            <li><span class="pt">✓</span> Data science and machine learning</li>
+            <li><span class="pt">✓</span> Data analytics and business intelligence</li>
+            <li><span class="pt">✓</span> AI engineering and LLM solutions</li>
+          </ul>
+          <div class="cta">
+            <a class="btn" href="https://www.linkedin.com/in/mohsin37" target="_blank" rel="noopener">LinkedIn ↗</a>
+            <a class="btn" href="https://github.com/aimldlds" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
         </div>
+
+        <form class="form-card reveal" id="contact-form" novalidate>
+          <p class="form-label" id="topic-label">I'm interested in…</p>
+          <div class="topics" role="radiogroup" aria-labelledby="topic-label">
+            <label><input type="radio" name="topic" value="Hiring you" checked><span>💼 Hiring me</span></label>
+            <label><input type="radio" name="topic" value="A project"><span>🚀 A project</span></label>
+            <label><input type="radio" name="topic" value="Collaboration or research"><span>🔬 Collaborating</span></label>
+            <label><input type="radio" name="topic" value="Just saying hi"><span>👋 Saying hi</span></label>
+          </div>
+
+          <div class="field-row">
+            <label class="field"><span>Your name</span><input name="name" autocomplete="name" required placeholder="Jane Smith"></label>
+            <label class="field"><span>Your email</span><input name="email" type="email" autocomplete="email" required placeholder="jane@company.com"></label>
+          </div>
+          <label class="field"><span>Message</span><textarea name="message" rows="5" required placeholder="Tell me a little about the role or project…"></textarea></label>
+
+          <!-- Honeypot: hidden from people, bots fill it in and get ignored -->
+          <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+          <button class="btn primary send" type="submit">Send message →</button>
+          <p class="form-note" id="form-note" role="status" aria-live="polite"></p>
+        </form>
       </div>
     </section>
   </main>
@@ -646,6 +767,131 @@
         });
         card.addEventListener("pointerleave", () => { card.style.transform = ""; });
       });
+    }
+
+    /* ---------- Contact form ----------
+       Works straight away by opening the visitor's email app with the message filled in.
+       To receive messages directly instead, create a free form at formspree.io (or web3forms.com),
+       paste its URL below, and the form will send in the background. */
+    const FORM_ENDPOINT = "";                        // e.g. "https://formspree.io/f/xxxxxxxx"
+    const CONTACT_EMAIL = "ms.mohsinchaudhary@gmail.com";
+    const form = document.getElementById("contact-form");
+    const note = document.getElementById("form-note");
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const f = new FormData(form);
+      if (f.get("website")) return;                  // honeypot: a bot filled the hidden field
+      let ok = true;
+      for (const el of form.querySelectorAll("[required]")) {
+        const bad = !el.value.trim() || (el.type === "email" && !/^\S+@\S+\.\S+$/.test(el.value));
+        el.classList.toggle("bad", bad); if (bad) ok = false;
+      }
+      note.className = "form-note";
+      if (!ok) { note.textContent = "Please fill in your name, a valid email and a message."; note.classList.add("err"); return; }
+      const topic = f.get("topic"), name = f.get("name"), email = f.get("email"), message = f.get("message");
+      if (FORM_ENDPOINT) {
+        note.textContent = "Sending…";
+        try {
+          const r = await fetch(FORM_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            body: JSON.stringify({ topic, name, email, message }) });
+          if (!r.ok) throw new Error();
+          form.reset(); note.textContent = "Thanks! Your message is on its way. I'll reply soon."; note.classList.add("ok");
+        } catch (err) { note.textContent = "Something went wrong. Please try again, or message me on LinkedIn."; note.classList.add("err"); }
+      } else {
+        const subject = encodeURIComponent("Portfolio enquiry: " + topic);
+        const body = encodeURIComponent(message + "\n\n" + name + "\n" + email);
+        location.href = "mailto:" + CONTACT_EMAIL + "?subject=" + subject + "&body=" + body;
+        note.textContent = "Opening your email app to send this message…"; note.classList.add("ok");
+      }
+    });
+
+    /* ---------- Scroll progress bar ---------- */
+    const bar = document.getElementById("progress");
+    function updateBar() {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      bar.style.transform = "scaleX(" + (max > 0 ? Math.min(scrollY / max, 1) : 0) + ")";
+    }
+    addEventListener("scroll", updateBar, { passive: true }); updateBar();
+
+    /* ---------- Staggered reveal: neighbouring cards arrive one after another ---------- */
+    document.querySelectorAll(".reveal").forEach(el => {
+      const group = [...el.parentElement.children].filter(c => c.classList.contains("reveal"));
+      const i = group.indexOf(el);
+      if (i > 0) {
+        el.style.transitionDelay = Math.min(i, 4) * 90 + "ms";
+        setTimeout(() => { el.style.transitionDelay = ""; }, 2200);   // clear so card tilt stays instant
+      }
+    });
+
+    /* ---------- Hover effects (mouse devices only, skipped if animations are off) ---------- */
+    if (!reduceMotion && window.matchMedia("(hover: hover)").matches) {
+      /* Spotlight follows the cursor inside cards */
+      document.querySelectorAll(".card").forEach(card => {
+        card.addEventListener("pointermove", e => {
+          const r = card.getBoundingClientRect();
+          card.style.setProperty("--mx", (e.clientX - r.left) + "px");
+          card.style.setProperty("--my", (e.clientY - r.top) + "px");
+        });
+      });
+
+      /* Buttons lean toward the cursor */
+      document.querySelectorAll(".btn").forEach(btn => {
+        btn.addEventListener("pointermove", e => {
+          const r = btn.getBoundingClientRect();
+          const x = (e.clientX - r.left - r.width / 2) * .22, y = (e.clientY - r.top - r.height / 2) * .3;
+          btn.style.transform = "translate(" + x + "px," + y + "px)";
+        });
+        btn.addEventListener("pointerleave", () => { btn.style.transform = ""; });
+      });
+
+      /* Hero photo and chips drift gently against the mouse for a sense of depth */
+      const photo = document.querySelector(".hero-photo"), chipsEl = document.querySelector(".chips");
+      hero.addEventListener("pointermove", e => {
+        const r = hero.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+        photo.style.transform = "translate(" + (-x * 16) + "px," + (-y * 10) + "px) scale(1.03)";
+        chipsEl.style.transform = "translate(" + (x * 22) + "px," + (y * 14) + "px)";
+      });
+      hero.addEventListener("pointerleave", () => { photo.style.transform = ""; chipsEl.style.transform = ""; });
+    }
+
+    /* ---------- Touch devices (iPhone and Android): tap and scroll versions of the mouse effects ---------- */
+    if (!reduceMotion && window.matchMedia("(hover: none)").matches) {
+      /* Tapping a card lights it up under your finger and tilts it slightly, then it settles back */
+      document.querySelectorAll(".card").forEach(card => {
+        card.addEventListener("pointerdown", e => {
+          const r = card.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+          card.style.setProperty("--mx", (e.clientX - r.left) + "px");
+          card.style.setProperty("--my", (e.clientY - r.top) + "px");
+          card.classList.add("touched");
+          card.style.transform = "perspective(800px) rotateX(" + (-y * 6) + "deg) rotateY(" + (x * 6) + "deg) scale(.985)";
+        });
+        const settle = () => { card.classList.remove("touched"); card.style.transform = ""; };
+        ["pointerup", "pointercancel", "pointerleave"].forEach(ev => card.addEventListener(ev, settle));   // pointercancel = you started scrolling
+      });
+
+      /* Scrolling gives the hero photo and chips a little depth: they move slower than the page */
+      const photoT = document.querySelector(".hero-photo"), chipsT = document.querySelector(".chips");
+      let tick = false;
+      addEventListener("scroll", () => {
+        if (tick || !heroVisible) return; tick = true;
+        requestAnimationFrame(() => {
+          const y = Math.min(scrollY, 400);
+          photoT.style.transform = "translateY(" + (y * .22) + "px) scale(" + (1 + y * .0004) + ")";
+          chipsT.style.transform = "translateY(" + (y * .1) + "px)";
+          tick = false;
+        });
+      }, { passive: true });
+
+      /* Touching or dragging on the hero pulls the network graph toward your finger */
+      const setTouch = e => {
+        const t = e.touches[0], r = hero.getBoundingClientRect();
+        mouse.x = t.clientX - r.left; mouse.y = t.clientY - r.top;
+      };
+      hero.addEventListener("touchstart", setTouch, { passive: true });
+      hero.addEventListener("touchmove", setTouch, { passive: true });
+      ["touchend", "touchcancel"].forEach(ev => hero.addEventListener(ev, () => { mouse.x = mouse.y = -999; }, { passive: true }));
     }
   </script>
 </body>
