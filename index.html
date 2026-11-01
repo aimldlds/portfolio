@@ -158,17 +158,6 @@
               mask-composite: intersect;
     }
     :root[data-theme="light"] .hero-photo { opacity: .92; }
-    /* On phones the photo moves to the top as its own block and fades into the background; the text sits below it */
-    @media (max-width: 860px) {
-      .hero { flex-direction: column; align-items: stretch; justify-content: flex-start; min-height: 0; padding: 62px 0 48px; }
-      .hero-photo {
-        position: relative; width: 100%; height: min(62vh, 520px); flex: none; opacity: 1; object-position: center 12%;
-        -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%); mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
-        -webkit-mask-composite: initial; mask-composite: initial;
-      }
-      .hero .wrap { margin-top: -56px; }
-      .hero-text { max-width: none; }
-    }
 
     .scroll-hint { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); color: var(--muted); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
     @media (max-height: 720px), (max-width: 860px) { .scroll-hint { display: none; } }
@@ -187,7 +176,6 @@
     .eyebrow { color: var(--accent); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; margin-bottom: 10px; }
     section.block h2 { font-size: clamp(28px, 4vw, 40px); margin-bottom: 28px; }
     .about-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 40px; }
-    @media (max-width: 800px) { .about-grid { grid-template-columns: 1fr; } }
     .about-grid p { color: var(--muted); margin-bottom: 14px; }
     .about-grid p strong { color: var(--text); font-weight: 500; }
     .wins { list-style: none; margin: 4px 0 18px; display: grid; gap: 10px; }
@@ -210,7 +198,6 @@
     .card li { margin-bottom: 5px; }
     .card li strong { color: var(--text); font-weight: 600; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-    @media (max-width: 760px) { .grid-2 { grid-template-columns: 1fr; } }
     .stack { display: grid; gap: 18px; }
 
     .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
@@ -252,10 +239,10 @@
     .topics input { position: absolute; opacity: 0; pointer-events: none; }
     .topics span {
       display: inline-block; padding: 8px 14px; border-radius: 999px; font-size: 14px;
-      border: 1px solid var(--line); color: var(--muted); transition: all .2s;
+      border: 1px solid var(--line); color: var(--muted); transition: background .25s ease, border-color .25s ease, color .25s ease;
     }
     .topics label:hover span { border-color: var(--accent); color: var(--text); }
-    .topics input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 600; }
+    .topics input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
     .topics input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 3px; }
 
     .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -313,7 +300,7 @@
     @media (hover: none) {
       .btn:hover { transform: none; }
       .btn:active { transform: scale(.95); }
-      .filter:active, .topics span:active { transform: scale(.94); }
+      .filter:active { transform: scale(.94); }
     }
 
 
@@ -339,7 +326,6 @@
     .hero-text > :nth-child(7) { animation-delay: .76s; }
     .hero-text > :nth-child(8) { animation-delay: .88s; }
     /* Phones: leave room under the text for the skill field */
-    @media (max-width: 860px) { .hero { padding-bottom: 250px; } }
 
     /* Soft colour glows behind About and Experience (very slow) */
     section.block, .stats, .contact { position: relative; overflow: hidden; }
@@ -360,11 +346,9 @@
 
     /* Buttons: a soft ripple where you click or tap, and a small press */
     .btn, .filter, .icon-btn, .topics span, .cert-tile, .socials a { position: relative; overflow: hidden; -webkit-tap-highlight-color: transparent; }
-    .ripple { position: absolute; border-radius: 50%; pointer-events: none; background: currentColor; opacity: .22; transform: scale(0); animation: ripple .6s ease-out forwards; }
+    .ripple { position: absolute; border-radius: 50%; pointer-events: none; background: currentColor; opacity: .16; transform: scale(0); animation: ripple .45s ease-out forwards; }
     @keyframes ripple { to { transform: scale(1); opacity: 0; } }
-    .btn:active, .filter:active, .topics span:active, .cert-tile:active { transform: scale(.96); }
-    .topics input:checked + span { animation: popchip .3s ease; }
-    @keyframes popchip { 50% { transform: scale(1.06); } }
+    .btn:active, .filter:active, .cert-tile:active { transform: scale(.96); }
     .links a.plain { position: relative; }
     .links a.plain::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .3s; }
     .links a.plain:hover::after { transform: scaleX(1); }
@@ -388,7 +372,7 @@
     .btn:hover .arr.up, .btn:active .arr.up { transform: translate(3px, -3px); }
     .btn:hover { box-shadow: 0 8px 24px var(--glow); }
     .icon-btn:hover { transform: rotate(30deg); }
-    .filter:hover, .topics label:hover span { transform: translateY(-2px); }
+    .filter:hover { transform: translateY(-2px); }
     .cert-tile:hover { transform: translateY(-2px); background: color-mix(in srgb, var(--accent) 24%, transparent); }
     .socials a { transition: color .2s, transform .2s; }
     .socials a:hover { transform: translateY(-2px); }
@@ -502,6 +486,76 @@
       .js .reveal, .js .reveal li, .js .card.reveal .tag { opacity: 1; transform: none; }
       .js .about-photo { clip-path: none; }
       html { scroll-behavior: auto; }
+    }
+
+    /* ================= PHONES: the same arrangement as the desktop, scaled down =================
+       Photo on the right with the text on the left, two tiles per row, translucent tiles so the
+       animations show through. (Only the contact form stacks, so there is room to type.) */
+    @media (max-width: 860px) {
+      body { font-size: 14.5px; }
+      .wrap { padding: 0 14px; }
+      section.block { padding: 54px 0; }
+      section.block h2 { font-size: clamp(22px, 6.4vw, 32px); margin-bottom: 18px; }
+      .eyebrow { font-size: 11px; }
+
+      /* hero: text left, photo right, skills underneath */
+      .hero { flex-direction: row; align-items: center; min-height: 100svh; padding: 78px 0 240px; }
+      .hero .wrap { width: 100%; }
+      .hero-photo { position: absolute; top: 0; right: 0; bottom: 240px; height: auto; width: 56%; object-position: 60% 14%; }
+      .hero-text { max-width: 66%; }
+      .status { font-size: 11px; padding: 5px 10px; }
+      .hello { margin: 12px 0 2px; }
+      .hello .hi { font-size: 20px; }
+      .hello .name { font-size: clamp(26px, 8.4vw, 42px); white-space: normal; }
+      .hero h1.mega { font-size: clamp(26px, 8.2vw, 46px); margin: 4px 0 10px; }
+      .role-line { font-size: 14px; min-height: 3.4em; }
+      .hero-points { gap: 5px; margin: 8px 0 16px; }
+      .hero-points li { font-size: 12.5px; padding-left: 20px; }
+      .btn { padding: 10px 14px; font-size: 13px; }
+      .cta { gap: 8px; }
+      .socials { margin-top: 14px; font-size: 12.5px; }
+
+      /* stats */
+      .stats .wrap { gap: 10px; padding-block: 24px; }
+      .stat .lbl { font-size: 11.5px; }
+
+      /* about: text left, photo and facts right */
+      .about-grid { gap: 16px; }
+      .about-line { font-size: 14px; }
+      .wins li { font-size: 13px; }
+      .about-photo { border-radius: 12px; margin-bottom: 10px; }
+
+      /* all tiles: smaller, translucent, two per row */
+      .card { padding: 14px; border-radius: 14px; background: color-mix(in srgb, var(--surface) 62%, transparent); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); }
+      .card h3 { font-size: 15.5px; }
+      .card p, .card li { font-size: 12.5px; margin-bottom: 3px; }
+      .card ul { padding-left: 16px; }
+      .meta { font-size: 11.5px; margin-bottom: 8px; }
+      .tag { font-size: 10.5px; padding: 3px 8px; }
+      .tags { gap: 5px; margin-top: 8px; }
+      .grid-2 { gap: 10px; }
+      .filters { gap: 6px; margin-bottom: 14px; }
+      .filter { padding: 6px 11px; font-size: 12.5px; }
+      .big-number { font-size: 18px; }
+      .card-cta { margin-top: 10px; }
+      .card-cta .btn { padding: 7px 10px; font-size: 12px; }
+      #projects .grid-2 .card::before { font-size: 26px; top: 8px; right: 10px; }
+      #projects .card h3 { padding-right: 30px; }
+      .stack { padding-left: 22px; gap: 12px; }
+      .stack::before, .stack::after { left: 4px; }
+      .stack > .card::before { left: -25px; top: 20px; width: 12px; height: 12px; }
+
+      /* certificates: two per row, staggered */
+      .cert-cloud { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; height: auto; }
+      .cert-tile { width: auto; padding: 12px 14px; border-radius: 14px; margin: 0 !important; }
+      .cert-tile:nth-child(even) { margin-top: 22px !important; }
+      .cert-by { font-size: 10px; margin-bottom: 4px; letter-spacing: .04em; }
+      .cert-name { font-size: 14.5px; }
+      .cert-code { font-size: 11.5px; margin-top: 6px; }
+
+      /* contact stays stacked so the form is easy to use */
+      .contact-lede { font-size: 14px; }
+      .contact-points li { font-size: 14px; }
     }
   </style>
 </head>
@@ -864,7 +918,7 @@
     const hero = document.querySelector(".hero");
     const SKILLS = ["Python", "SQL", "Azure ML", "Microsoft Fabric", "Azure AutoML", "Agentic AI", "LLMs", "RAG", "MLOps", "Power BI",
                     "PySpark", "Databricks", "Forecasting", "Explainable AI", "KQL", "CI/CD"];
-    let W = 0, H = 0, nodes = [], edges = [], pulses = [], spark = null, sparkNext = 1.5;
+    let W = 0, H = 0, fs = 15, nodes = [], edges = [], pulses = [], spark = null, sparkNext = 1.5;
     let mouse = { x: -999, y: -999 }, heroVisible = true, accent = "94,234,212", ink = "232,239,236";
 
     function hexToRgb(hex) {
@@ -886,16 +940,17 @@
       const add = (el, pad) => { if (!el) return; const r = el.getBoundingClientRect(); blocked.push([r.left - hr.left - pad, r.top - hr.top - pad, r.right - hr.left + pad, r.bottom - hr.top + pad]); };
       add(document.querySelector(".hero-text"), 28); add(document.querySelector(".hero-photo"), 0);
       blocked.push([0, 0, W, 78]);                       // under the nav bar
-      ctx.font = "700 15px 'JetBrains Mono', monospace";
+      fs = W < 700 ? 13 : 15;
+      ctx.font = "700 " + fs + "px 'JetBrains Mono', monospace";
       nodes = [];
       const order = SKILLS.map((s, i) => [Math.random(), s]).sort((a, b) => a[0] - b[0]).map(x => x[1]);
       for (const label of order) {
-        const w = ctx.measureText(label).width + 34, h = 32;
+        const w = ctx.measureText(label).width + 30, h = fs + 17;
         for (let tries = 0; tries < 160; tries++) {
           const x = 16 + Math.random() * (W - w - 32), y = 90 + Math.random() * (H - h - 130);
           const box = [x - 12, y - 10, x + w + 12, y + h + 10];
           const hit = blocked.some(b => box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1]) ||
-                      nodes.some(n => box[0] < n.x + n.w + 12 && box[2] > n.x - 12 && box[1] < n.y + 32 + 10 && box[3] > n.y - 10);
+                      nodes.some(n => box[0] < n.x + n.w + 12 && box[2] > n.x - 12 && box[1] < n.y + fs + 17 + 10 && box[3] > n.y - 10);
           if (!hit) { nodes.push({ label, x, y, w, ph: Math.random() * 6.28, glow: 0, lit: 0 }); break; }
         }
       }
@@ -950,7 +1005,7 @@
         ctx.fillStyle = "rgba(" + accent + "," + (.7 + s * .3) + ")";
         ctx.beginPath(); ctx.arc(x, y, 4 + s * 3, 0, 7); ctx.fill();
         if (s > .05) { ctx.strokeStyle = "rgba(" + accent + "," + s * .55 + ")"; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(x, y, 9 + s * 8, 0, 7); ctx.stroke(); }
-        ctx.font = "700 " + (15 + s * 4) + "px 'JetBrains Mono', monospace";
+        ctx.font = "700 " + (fs + s * 4) + "px 'JetBrains Mono', monospace";
         ctx.fillStyle = s > .15 ? "rgba(" + accent + ",1)" : "rgba(" + ink + ",.82)";
         if (s > .15) { ctx.shadowColor = "rgba(" + accent + ",.7)"; ctx.shadowBlur = 14 * s; }
         ctx.fillText(n.label, x + 15, y);
@@ -1154,13 +1209,13 @@
     /* ---------- Soft ripple on every button (mouse click or finger tap) ---------- */
     function addRipple(e) {
       if (reduceMotion) return;
-      const el = e.currentTarget, r = el.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2;
+      const el = e.currentTarget, r = el.getBoundingClientRect(), d = Math.min(Math.max(r.width, r.height) * 2, 130);
       const dot = document.createElement("span");
       dot.className = "ripple";
       dot.style.cssText = "width:" + d + "px;height:" + d + "px;left:" + (e.clientX - r.left - d / 2) + "px;top:" + (e.clientY - r.top - d / 2) + "px";
       el.appendChild(dot); setTimeout(() => dot.remove(), 650);
     }
-    document.querySelectorAll(".btn, .filter, .icon-btn, .topics span, .cert-tile, .socials a").forEach(b => b.addEventListener("pointerdown", addRipple));
+    document.querySelectorAll(".btn, .filter, .icon-btn, .cert-tile, .socials a").forEach(b => b.addEventListener("pointerdown", addRipple));
 
     /* ---------- Stagger: bullets and tags arrive one after another ---------- */
     document.querySelectorAll(".reveal ul").forEach(ul => [...ul.children].forEach((li, i) => li.style.setProperty("--i", i)));
@@ -1220,7 +1275,7 @@
         }
         const n = Math.round((W * H) / (narrow ? 70000 : 85000));
         for (let i = 0; i < n; i++) glyphs.push({ t: GLYPHS[(Math.random() * GLYPHS.length) | 0], x: rnd(0, W), y: rnd(0, H), vx: rnd(-9, 9), vy: rnd(-9, 9), bx: 0, by: 0,
-          size: rnd(15, 27), a: rnd(.22, .42), rot: rnd(-.4, .4), vr: rnd(-.05, .05), v: Math.random() < .3 });
+          size: rnd(15, 27), a: narrow ? rnd(.32, .52) : rnd(.22, .42), rot: rnd(-.4, .4), vr: rnd(-.05, .05), v: Math.random() < .3 });
         glyphs.forEach(g => { g.bx = g.vx; g.by = g.vy; });
       }
       function size() {
